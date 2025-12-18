@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Integer Number Line</title>
+    <style>
+        /* General Styles */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0.5rem;
+    min-height: 100vh;
+}
+@media (min-width: 640px) {
+    body { padding: 1rem; }
+}
+
+/* Main container card */
+.main-card {
+    width: 100%;
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+@media (min-width: 768px) {
+    .main-card { padding: 2.5rem; }
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+}
+@media (min-width: 640px) { .header-title { font-size: 2rem; } }
+@media (min-width: 768px) { .header-title { font-size: 2.5rem; } }
+
+.header-subtitle {
+    color: #64748b;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+@media (min-width: 640px) { .header-subtitle { font-size: 1rem; } }
+
+/* Controls Section */
+.controls-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+@media (min-width: 768px) {
+    .controls-container {
+        flex-direction: row;
+        gap: 2rem;
+        justify-content: center;
+    }
+}
+
+.operation-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.operation-label {
+    display: block;
+    text-align: center;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+#operation {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    width: 189px;
+    font-weight: 600;
+    border: 2px solid #cbd5e1;
+    border-radius: 0.75rem;
+    background-color: #FFFFFF;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    text-align: center;
+    text-align-last: center;
+}
+@media (min-width: 768px) { #operation { font-size: 1.125rem; } }
+#operation:hover {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+#operation:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+}
+#resetBtn {
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #FFFFFF;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+#resetBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+#resetBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+/* Equation Section */
+.equation-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.25rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+    margin-top: -6rem;
+}
+@media (min-width: 640px) { .equation-container { font-size: 1.5rem; gap: 0.5rem; } }
+@media (min-width: 768px) { .equation-container { gap: 1rem; font-size: 1.875rem; } }
+
+.equation-term { text-align: center; }
+.equation-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6B7280;
+}
+.equation-number {
+    width: 4.5rem;
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: 700;
+}
+@media (min-width: 640px) { .equation-number { width: 6rem; } }
+@media (min-width: 768px) { .equation-number { width: 7rem; } }
+
+.num1-color { color: #2563EB; }
+.num2-color { color: #DB2777; }
+.result-color { color: #1F2937; }
+
+.operator-symbol {
+    margin: 0 0.25rem;
+    padding-bottom: 0.5rem;
+}
+@media (min-width: 768px) { .operator-symbol { margin: 0 0.5rem; } }
+
+/* Explanation & Fruit Boxes */
+.explanation-box {
+    margin-top: 2rem;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 0 1rem 1rem 0;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.explanation-title {
+    font-weight: 700;
+    color: #78350f;
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+}
+.explanation-text {
+    color: #92400e;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+ @media (min-width: 640px) { .explanation-text { font-size: 1rem; } }
+
+.fruit-visualization-box {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 1rem;
+    min-height: 80px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+.fruit-viz-text {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+@media (min-width: 640px) { .fruit-viz-text { font-size: 1rem; } }
+
+/* Number Line Specific Styles */
+.number-line-container {
+    position: relative;
+    user-select: none;
+    padding-top: 60px;
+    cursor: grab;
+    height: 10rem;
+    width: 100%;
+    touch-action: pan-y; /* Allow vertical scroll but prevent default horizontal actions */
+}
+.number-line-container:grabbing { cursor: grabbing; }
+.number-line {
+    position: relative;
+    height: 3px;
+    background-color: #4A5568;
+}
+.number-line::before, .number-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    border: solid transparent;
+    border-width: 8px 12px;
+    transform: translateY(-50%);
+}
+.number-line::before { left: -12px; border-right-color: #4A5568; }
+.number-line::after { right: -12px; border-left-color: #4A5568; }
+.tick {
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    background-color: #4A5568;
+    transform: translate(-50%, -50%);
+}
+.tick.major { height: 20px; }
+.tick.minor { height: 10px; }
+.number-label {
+    position: absolute;
+    bottom: -32px;
+    transform: translateX(-50%);
+    font-size: 0.875rem;
+    color: #4A5568;
+}
+.marker {
+    position: absolute;
+    top: -16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.875rem;
+    z-index: 10;
+    cursor: grab;
+    border: 3px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease-out;
+    touch-action: none; /* Prevent scrolling when grabbing marker */
+}
+@media (min-width: 768px) {
+    .marker {
+        top: -20px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        border-width: 4px;
+    }
+}
+.marker.dragging {
+    cursor: grabbing;
+    transform: scale(1.15);
+    z-index: 20;
+}
+.marker-1 { background-color: #3B82F6; color: white; }
+.marker-2 { background-color: #EC4899; color: white; }
+
+.operation-arrow {
+    position: absolute;
+    height: 2px;
+    z-index: 5;
+    transform-origin: left center;
+}
+.operation-arrow::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -5px;
+    border: 6px solid transparent;
+    border-left-color: #EC4899;
+}
+.jump-arc {
+    position: absolute;
+    top: -35px;
+    height: 30px;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #9CA3AF transparent transparent transparent;
+    border-radius: 50% / 100% 100% 0 0;
+    transform-origin: bottom center;
+    z-index: 5;
+}
+.jump-arc::after {
+     content: '';
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #9CA3AF;
+}
+/* New styles for the result arrow in division */
+.result-arrow {
+    position: absolute;
+    bottom: 55%; /* Position it above the jump arcs */
+    height: 3px;
+    background-color: #22c55e; /* Green for the answer */
+    opacity: 0.9;
+    border-top: 3px dashed #22c55e;
+    background-color: transparent;
+    box-sizing: border-box;
+    z-index: 6; /* Ensure it's on top */
+}
+
+.result-arrow::after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: -8px;
+    border: 8px solid transparent;
+    border-left-color: #22c55e;
+    border-right: 0;
+}
+
+.fruit-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+    border: 2px dashed #D1D5DB;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+}
+.fruit-icon { font-size: 1.5rem; }
+.fruit-icon.negative {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+.op-symbol-viz {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4A5568;
+}
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <header class="header">
+        <h1 class="header-title">Interactive Number Line</h1>
+        <p class="header-subtitle">Drag the circles or drag the number line to explore!</p>
+    </header>
+
+    <div class="controls-container">
+        <div>
+            <label for="operation" class="operation-label">Select Operation</label>
+            <select id="operation">
+                <option value="add">Addition (+)</option>
+                <option value="subtract">Subtraction (-)</option>
+                <option value="multiply">Multiplication (×)</option>
+                <option value="divide">Division (÷)</option>
+            </select>
+        </div>
+        <button id="resetBtn">Reset View</button>
+    </div>
+
+    <div class="main-content">
+        <div id="numberLineContainer" class="number-line-container">
+            <div class="number-line">
+                <div id="ticksAndLabelsContainer"></div>
+            </div>
+            <div id="visualsContainer"></div>
+        </div>
+
+        <div id="equationContainer" class="equation-container">
+            <div class="equation-term">
+                <label id="label1" class="equation-label">Addend</label>
+                <div id="num1" class="equation-number num1-color">-1</div>
+            </div>
+            <span id="operatorSymbol" class="operator-symbol">+</span>
+            <div class="equation-term">
+                <label id="label2" class="equation-label">Addend</label>
+                <div id="num2" class="equation-number num2-color">1</div>
+            </div>
+            <span class="operator-symbol">=</span>
+            <div class="equation-term">
+                <label id="labelResult" class="equation-label">Sum</label>
+                <div id="result" class="equation-number result-color">2</div>
+            </div>
+        </div>
+
+        <div id="explanationBox" class="explanation-box">
+            <h3 class="explanation-title">Operations on Integers</h3>
+            <p id="explanationText" class="explanation-text"></p>
+        </div>
+
+        <div id="fruitVisualization" class="fruit-visualization-box">
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const state = {
+            num1: -1,
+            num2: 1,
+            min_num: -7,
+            max_num: 7,
+            operation: 'add',
+            dragging: null,
+            isPanning: false,
+            panStartX: 0,
+        };
+
+        const numberLineContainer = document.getElementById('numberLineContainer');
+        const visualsContainer = document.getElementById('visualsContainer');
+        const ticksAndLabelsContainer = document.getElementById('ticksAndLabelsContainer');
+        const operationSelect = document.getElementById('operation');
+        const resetBtn = document.getElementById('resetBtn');
+        const num1Display = document.getElementById('num1');
+        const num2Display = document.getElementById('num2');
+        const resultDisplay = document.getElementById('result');
+        const explanationText = document.getElementById('explanationText');
+
+        let unitWidth;
+
+        const LABELS = {
+            add: { label1: 'Addend', label2: 'Addend', labelResult: 'Sum', symbol: '+' },
+            subtract: { label1: 'Minuend', label2: 'Subtrahend', labelResult: 'Difference', symbol: '-' },
+            multiply: { label1: 'Multiplicand', label2: 'Multiplier', labelResult: 'Product', symbol: '×' },
+            divide: { label1: 'Dividend', label2: 'Divisor', labelResult: 'Quotient', symbol: '÷' }
+        };
+
+        function initialize() {
+            const marker1 = document.createElement('div');
+            marker1.id = 'marker1';
+            marker1.className = 'marker marker-1';
+            numberLineContainer.appendChild(marker1);
+
+            const marker2 = document.createElement('div');
+            marker2.id = 'marker2';
+            marker2.className = 'marker marker-2';
+            numberLineContainer.appendChild(marker2);
+
+            setupEventListeners();
+            updateUI();
+        }
+
+        function drawNumberLine() {
+            ticksAndLabelsContainer.innerHTML = ''; // Clear old ticks
+            const range = state.max_num - state.min_num;
+            if (range <= 0) return;
+
+            let labelStep;
+            let tickStep;
+
+            if (range <= 30) {
+                labelStep = 1;
+                tickStep = 1;
+            } else {
+                const targetLabelCount = 8;
+                const roughStep = range / targetLabelCount;
+                const niceSteps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000, 2000, 5000];
+                labelStep = niceSteps.find(step => step >= roughStep) || niceSteps[niceSteps.length - 1];
+                tickStep = labelStep / (labelStep > 10 ? 5 : 2);
+            }
+
+            const firstValue = Math.floor(state.min_num / tickStep) * tickStep;
+
+            for (let i = firstValue; i <= state.max_num; i += tickStep) {
+                const pos = ((i - state.min_num) / range) * 100;
+                if (pos < 0 || pos > 100) continue;
+
+                const isLabelTick = Math.abs(i % labelStep) < 1e-9;
+                const isZero = Math.abs(i) < 1e-9;
+
+                const tick = document.createElement('div');
+                tick.className = `tick ${isLabelTick || isZero ? 'major' : 'minor'}`;
+                tick.style.left = `${pos}%`;
+                ticksAndLabelsContainer.appendChild(tick);
+
+                if (isLabelTick) {
+                    const label = document.createElement('div');
+                    label.className = 'number-label';
+                    label.textContent = parseFloat(i.toPrecision(12));
+                    label.style.left = `${pos}%`;
+                    ticksAndLabelsContainer.appendChild(label);
+                }
+            }
+        }
+
+        function setupEventListeners() {
+            ['mousedown', 'touchstart'].forEach(evt => {
+                document.getElementById('marker1').addEventListener(evt, e => startDrag(e, 1));
+                document.getElementById('marker2').addEventListener(evt, e => startDrag(e, 2));
+                numberLineContainer.addEventListener(evt, startPan);
+            });
+
+            ['mousemove', 'touchmove'].forEach(evt => {
+                window.addEventListener(evt, handleMove);
+            });
+
+            ['mouseup', 'touchend'].forEach(evt => {
+                window.addEventListener(evt, handleEnd);
+            });
+
+            operationSelect.addEventListener('change', (e) => {
+                state.operation = e.target.value;
+                updateUI();
+            });
+
+            resetBtn.addEventListener('click', () => {
+                state.num1 = 1;
+                state.num2 = -1;
+                state.min_num = -7;
+                state.max_num = 7;
+                state.operation = 'add';
+                operationSelect.value = 'add';
+                updateUI();
+            });
+
+            window.addEventListener('resize', updateUI);
+        }
+
+        function updateMetrics() {
+            unitWidth = numberLineContainer.querySelector('.number-line').offsetWidth / (state.max_num - state.min_num);
+        }
+
+        function getNumberFromX(x) {
+            const rect = numberLineContainer.querySelector('.number-line').getBoundingClientRect();
+            const relativeX = x - rect.left;
+            const number = (relativeX / rect.width) * (state.max_num - state.min_num) + state.min_num;
+            return Math.round(number);
+        }
+
+        function startDrag(e, markerNum) {
+            e.stopPropagation();
+            state.dragging = markerNum;
+            document.getElementById(`marker${markerNum}`).classList.add('dragging');
+        }
+
+        function startPan(e) {
+            if (e.target.classList.contains('marker')) return;
+            e.preventDefault();
+            state.isPanning = true;
+            state.panStartX = e.touches ? e.touches[0].clientX : e.clientX;
+            numberLineContainer.style.cursor = 'grabbing';
+        }
+
+        function handleMove(e) {
+            const x = e.touches ? e.touches[0].clientX : e.clientX;
+            if (state.dragging !== null) {
+                const newValue = getNumberFromX(x);
+                if (state.dragging === 1 && state.num1 !== newValue) {
+                    state.num1 = newValue;
+                    updateUI();
+                } else if (state.dragging === 2 && state.num2 !== newValue) {
+                    state.num2 = newValue;
+                    updateUI();
+                }
+            } else if (state.isPanning) {
+                const deltaX = x - state.panStartX;
+                const deltaNum = deltaX / unitWidth;
+                state.min_num -= deltaNum;
+                state.max_num -= deltaNum;
+                state.panStartX = x;
+                updateUI();
+            }
+        }
+
+        function handleEnd() {
+            if (state.dragging !== null) {
+                document.getElementById(`marker${state.dragging}`).classList.remove('dragging');
+                state.dragging = null;
+            }
+            if (state.isPanning) {
+                state.isPanning = false;
+                numberLineContainer.style.cursor = 'grab';
+            }
+        }
+
+        function updateUI() {
+            updateMetrics();
+            drawNumberLine();
+            updateEquationLabels();
+
+            const markerSize = window.innerWidth < 768 ? 16 : 20;
+            const pos1 = ((state.num1 - state.min_num) / (state.max_num - state.min_num)) * 100;
+            const marker1 = document.getElementById('marker1');
+            marker1.style.left = `calc(${pos1}% - ${markerSize}px)`;
+            marker1.textContent = state.num1;
+            marker1.style.display = (pos1 >= 0 && pos1 <= 100) ? 'flex' : 'none';
+
+            const pos2 = ((state.num2 - state.min_num) / (state.max_num - state.min_num)) * 100;
+            const marker2 = document.getElementById('marker2');
+            marker2.style.left = `calc(${pos2}% - ${markerSize}px)`;
+            marker2.textContent = state.num2;
+            marker2.style.display = (pos2 >= 0 && pos2 <= 100) ? 'flex' : 'none';
+
+            num1Display.textContent = state.num1;
+            // NEW, CORRECTED CODE
+if (state.num2 < 0) {
+    num2Display.textContent = `(${state.num2})`;
+} else {
+    num2Display.textContent = state.num2;
+}
+
+            calculateAndExplain();
+        }
+
+        function updateEquationLabels() {
+            const config = LABELS[state.operation];
+            document.getElementById('label1').textContent = config.label1;
+            document.getElementById('label2').textContent = config.label2;
+            document.getElementById('labelResult').textContent = config.labelResult;
+            document.getElementById('operatorSymbol').textContent = config.symbol;
+        }
+
+        function calculateAndExplain() {
+            const { num1, num2, operation } = state;
+            let result;
+            let explanation = '';
+            visualsContainer.innerHTML = '';
+
+            switch (operation) {
+                case 'add':
+                    result = num1 + num2;
+                    explanation = `<strong>Addition Rule:</strong> To add a positive number, move right. To add a negative, move left. We start at ${num1} and move ${Math.abs(num2)} steps to the ${num2 >= 0 ? 'right' : 'left'}, which brings us to ${result}.`;
+                    // UPDATED: Use jumps for addition
+                    drawJumps(num1, num2, 1);
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    explanation = `<strong>Subtraction Rule:</strong> To subtract a number, you add its opposite. So, ${num1} - (${num2}) is the same as ${num1} + (${-num2}). From ${num1}, we move ${Math.abs(num2)} steps ${num2 >= 0 ? 'left' : 'right'} to find the difference: ${result}.`;
+                    // UPDATED: Use jumps for subtraction
+                    drawJumps(num1, -num2, 1);
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    explanation = `<strong>Multiplication Rule:</strong> The signs of the numbers determine the result's sign. A (${num1 > 0 ? 'Positive' : 'Negative'}) × (${num2 > 0 ? 'Positive' : 'Negative'}) results in a ${result >= 0 ? 'Positive' : 'Negative'} answer. This means making ${Math.abs(num2)} equal jumps of size ${Math.abs(num1)}, starting from 0, to land on the answer: ${result}.`;
+                    const multiStep = num2 < 0 ? -num1 : num1;
+                    const multiJumps = Math.abs(num2);
+                    drawJumps(0, multiStep, multiJumps);
+                    break;
+                case 'divide':
+                    if (num2 === 0) {
+                        result = '∞';
+                        explanation = "<strong>Division Rule:</strong> You can never divide by zero! It's a fundamental rule in math because it's impossible to split something into zero groups.";
+                    } else {
+                        result = num1 / num2;
+                        explanation = `<strong>Division Rule:</strong> This asks how many groups of ${num2} fit into ${num1}. The sign rules are like multiplication. A (${num1 >= 0 ? 'Positive' : 'Negative'}) ÷ (${num2 >= 0 ? 'Positive' : 'Negative'}) gives a ${result >= 0 ? 'Positive' : 'Negative'} answer. The answer, or quotient, is ${parseFloat(result.toFixed(2))}.`;
+
+                        if (Number.isFinite(result)) {
+                            drawResultArrow(result);
+                        }
+                    }
+                    break;
+            }
+
+            resultDisplay.textContent = typeof result === 'number' ? parseFloat(result.toFixed(2)) : result;
+            explanationText.innerHTML = explanation;
+            updateFruitVisualization(operation, num1, num2, result);
+        }
+
+        // Function to draw the special result arrow for division
+        function drawResultArrow(result) {
+            if (result === 0) return;
+
+            const startPos = ((0 - state.min_num) / (state.max_num - state.min_num)) * 100;
+            const endPos = ((result - state.min_num) / (state.max_num - state.min_num)) * 100;
+
+            if (Math.max(startPos, endPos) < 0 || Math.min(startPos, endPos) > 100) return;
+
+            const resultArrow = document.createElement('div');
+            resultArrow.className = 'result-arrow';
+            resultArrow.style.left = `${Math.min(startPos, endPos)}%`;
+            resultArrow.style.width = `${Math.abs(endPos - startPos)}%`;
+
+            if (result < 0) {
+                resultArrow.style.transform = 'scaleX(-1)';
+            }
+            visualsContainer.appendChild(resultArrow);
+        }
+
+        function drawJumps(start, stepSize, jumpCount) {
+            if (stepSize === 0) return;
+            let current = start;
+            for (let i = 0; i < Math.abs(jumpCount); i++) {
+                const next = current + stepSize;
+                const startPos = ((current - state.min_num) / (state.max_num - state.min_num)) * 100;
+                const endPos = ((next - state.min_num) / (state.max_num - state.min_num)) * 100;
+
+                if (Math.max(startPos, endPos) < 0 || Math.min(startPos, endPos) > 100) {
+                    current = next;
+                    continue;
+                };
+
+                const arc = document.createElement('div');
+                arc.className = 'jump-arc';
+                arc.style.left = `${Math.min(startPos, endPos)}%`;
+                arc.style.width = `${Math.abs(endPos - startPos)}%`;
+
+                if (stepSize < 0) {
+                   arc.style.transform = `scaleX(-1)`;
+                }
+
+                visualsContainer.appendChild(arc);
+                current = next;
+            }
+        }
+
+        function createFruitGroup(count, isNegative = false) {
+            const group = document.createElement('div');
+            group.className = 'fruit-group';
+            for (let i = 0; i < Math.abs(count); i++) {
+                const fruitSpan = document.createElement('span');
+                fruitSpan.className = `fruit-icon ${isNegative ? 'negative' : ''}`;
+                fruitSpan.textContent = '🍎';
+                group.appendChild(fruitSpan);
+            }
+            return group;
+        }
+
+        function createOperatorSymbol(symbol) {
+            const op = document.createElement('span');
+            op.className = 'op-symbol-viz';
+            op.textContent = symbol;
+            return op;
+        }
+
+        function updateFruitVisualization(operation, num1, num2, result) {
+            const container = document.getElementById('fruitVisualization');
+            container.innerHTML = '';
+
+            const limit = 25;
+            if (Math.abs(num1) > limit || Math.abs(num2) > limit || Math.abs(result) > limit * 2) {
+                const p = document.createElement('p');
+                p.className = 'fruit-viz-text';
+                p.textContent = 'Fruit visualization is available for smaller numbers.';
+                container.appendChild(p);
+                return;
+            }
+
+            switch (operation) {
+                case 'add':
+                    container.appendChild(createFruitGroup(num1, num1 < 0));
+                    container.appendChild(createOperatorSymbol('+'));
+                    container.appendChild(createFruitGroup(num2, num2 < 0));
+                    container.appendChild(createOperatorSymbol('='));
+                    container.appendChild(createFruitGroup(result, result < 0));
+                    break;
+                case 'subtract':
+                     container.appendChild(createFruitGroup(num1, num1 < 0));
+                    container.appendChild(createOperatorSymbol('-'));
+                    container.appendChild(createFruitGroup(num2, num2 < 0));
+                    container.appendChild(createOperatorSymbol('='));
+                    container.appendChild(createFruitGroup(result, result < 0));
+                    break;
+                case 'multiply':
+                    for(let i = 0; i < Math.abs(num2); i++) {
+                         container.appendChild(createFruitGroup(num1, num1 < 0));
+                         if (i < Math.abs(num2) - 1) container.appendChild(createOperatorSymbol('+'));
+                    }
+                    container.appendChild(createOperatorSymbol('='));
+                    container.appendChild(createFruitGroup(result, result < 0));
+                    break;
+                case 'divide':
+                     if (num2 !== 0 && Number.isInteger(result)) {
+                        container.appendChild(createFruitGroup(num1, num1 < 0));
+                        container.appendChild(createOperatorSymbol('÷'));
+                        container.appendChild(createFruitGroup(num2, num2 < 0));
+                        container.appendChild(createOperatorSymbol('='));
+                        container.appendChild(createFruitGroup(result, result < 0));
+                     } else {
+                        const p = document.createElement('p');
+                        p.className = 'fruit-viz-text';
+                        p.textContent = 'Division is shown by splitting into whole groups.';
+                        container.appendChild(p);
+                     }
+                    break;
+            }
+        }
+
+        initialize();
+    });
+</script>
+</body>
+</html>

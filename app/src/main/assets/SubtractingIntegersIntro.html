@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subtracting Integers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #222;
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #064780 0%, #0a6bb5 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #064780;
+            font-size: 24px;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #444;
+        }
+
+        .rule-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .rule-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .rule-box strong {
+            color: #064780;
+        }
+
+        ul {
+            margin: 15px 0 20px 20px;
+        }
+
+        ul li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: -15px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #e0e7ff;
+        }
+
+        th {
+            background: linear-gradient(135deg, #064780 0%, #0a6bb5 100%);
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9ff;
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+
+        td {
+            background-color: #ffffff;
+            font-size: 15px;
+        }
+
+        td:last-child {
+            font-weight: 600;
+            color: #064780;
+            font-family: 'Courier New', monospace;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .calculator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .operator {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .result {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: 700;
+            min-height: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            th, td {
+                padding: 12px 10px;
+                font-size: 14px;
+            }
+
+            .calculator {
+                gap: 10px;
+            }
+
+            input[type="number"] {
+                width: 80px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Subtracting Integers</h1>
+    </div>
+
+    <div class="content">
+        <p>
+            Subtracting integers is the process of finding the difference between two integers.
+            The result may either increase or decrease the value, depending on whether the integers involved are positive, negative, or a mix of both.
+        </p>
+
+        <h2>📋 Rules for Subtracting Integers</h2>
+
+        <div class="rule-box">
+            <strong>Rule 1:</strong> If you subtract <strong>0</strong> from any integer, the result is the integer itself.
+            <br><em>Example: 7 − 0 = 7</em>
+        </div>
+
+        <div class="rule-box">
+            <strong>Rule 2:</strong> If you subtract any integer from <strong>0</strong>, the result is the additive inverse (opposite) of that integer.
+            <br><em>Example: 0 − 5 = −5</em>
+        </div>
+
+        <div class="rule-box">
+            <strong>Rule 3:</strong> Subtraction is performed by <strong>changing the sign of the subtrahend</strong> and proceeding to addition.
+            <ul style="margin-top: 10px;">
+                Also performed by <strong>(KCC)</strong> Keep Change Change
+                <li><strong>Keep</strong> the first number.</li>
+                <li><strong>Change</strong> the subtraction sign to addition.</li>
+                <li><strong>Change</strong> the the sign of the subtrahend (the second number).</li>
+            </ul>
+        </div>
+
+        <div class="interactive-demo">
+            <div class="demo-title">🧮 Try It Yourself!</div>
+            <div class="calculator">
+                <input type="number" id="num1" value="5" />
+                <span class="operator">−</span>
+                <input type="number" id="num2" value="3" />
+                <span class="operator">=</span>
+                <span style="min-width: 60px; font-size: 24px; font-weight: bold;" id="display">?</span>
+            </div>
+            <button onclick="calculate()">Calculate</button>
+            <div class="result" id="result"></div>
+        </div>
+
+        <h2>📊 Examples by Sign Combination</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Integer's Sign</th>
+                    <th>Operation Type</th>
+                    <th>Example</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Positive – Positive</td>
+                    <td>Subtraction</td>
+                    <td>5 − 3 = 2</td>
+                </tr>
+                <tr>
+                    <td>Positive – Negative</td>
+                    <td>Addition</td>
+                    <td>5 − (−3) = 8</td>
+                </tr>
+                <tr>
+                    <td>Positive – Negative</td>
+                    <td>Addition</td>
+                    <td>3 − (−5) = 8</td>
+                </tr>
+                <tr>
+                    <td>Positive – Positive</td>
+                    <td>Subtraction</td>
+                    <td>3 − 5 = −2</td>
+                </tr>
+                <tr>
+                    <td>Negative – Negative</td>
+                    <td>Subtraction</td>
+                    <td>−3 − (−5) = 2</td>
+                </tr>
+                <tr>
+                    <td>Negative – Negative</td>
+                    <td>Subtraction</td>
+                    <td>−5 − (−3) = −2</td>
+                </tr>
+                <tr>
+                    <td>Negative – Positive</td>
+                    <td>Addition</td>
+                    <td>−3 − 5 = −8</td>
+                </tr>
+                <tr>
+                    <td>Negative – Positive</td>
+                    <td>Addition</td>
+                    <td>−5 − 3 = −8</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const n1 = parseFloat(document.getElementById('num1').value) || 0;
+        const n2 = parseFloat(document.getElementById('num2').value) || 0;
+        const res = n1 - n2;
+
+        document.getElementById('display').textContent = res;
+        document.getElementById('result').textContent = `${n1} − ${n2} = ${res}`;
+    }
+
+    // Calculate on page load
+    calculate();
+
+    // Add input event listeners for real-time calculation
+    document.getElementById('num1').addEventListener('input', calculate);
+    document.getElementById('num2').addEventListener('input', calculate);
+</script>
+
+</body>
+</html>

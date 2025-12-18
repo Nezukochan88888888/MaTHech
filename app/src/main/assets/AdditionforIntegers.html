@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Operations Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .quiz-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px 30px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            border: 3px solid #4a90e2;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(74, 144, 226, 0.1);
+        }
+
+        .header h1 {
+            color: #1a202c;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header p {
+            color: #4a5568;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .question-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .question-label {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            min-width: 120px;
+        }
+
+        .answer-input {
+            width: 120px;
+            padding: 12px 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .answer-input.correct {
+            border-color: #48bb78;
+            background: #f0fff4;
+            color: #22543d;
+        }
+
+        .answer-input.incorrect {
+            border-color: #f56565;
+            background: #fff5f5;
+            color: #742a2a;
+            animation: shake 0.4s;
+        }
+
+        .answer-input:disabled {
+            cursor: not-allowed;
+        }
+
+        .feedback-icon {
+            font-size: 24px;
+            min-width: 30px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feedback-icon.show {
+            opacity: 1;
+        }
+
+        .button-container {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white;
+        }
+
+        .btn-check:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-check:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .score-container {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .score-container.show {
+            opacity: 1;
+        }
+
+        .score-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .score-message {
+            font-size: 16px;
+            color: #4a5568;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-box {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .question-label {
+                font-size: 18px;
+                min-width: 100px;
+            }
+
+            .answer-input {
+                width: 100px;
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            .btn {
+                font-size: 16px;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="quiz-box">
+        <div class="header">
+            <h1>🧮 Math Operations Challenge</h1>
+            <p>Perform the operations and enter your answers</p>
+        </div>
+
+        <div id="questions"></div>
+
+        <div class="button-container">
+            <button class="btn btn-check" id="checkBtn" disabled>
+                ✓ Check
+            </button>
+            <button class="btn btn-reset" id="resetBtn" style="display: none;">
+                ↻ Try Again
+            </button>
+        </div>
+
+        <div class="score-container" id="scoreContainer">
+            <div class="score-text" id="scoreText">Score: 0/10</div>
+            <div class="score-message" id="scoreMessage"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var questions = [
+        { q: '1+(-5)', a: -4 },
+        { q: '-5+3', a: -2 },
+        { q: '-2+5', a: 3 },
+        { q: '-1+9', a: 8 },
+        { q: '9+(-2)', a: 7 },
+        { q: '7+(-5)', a: 2 },
+        { q: '-10+2', a: -8 },
+        { q: '-7+3', a: -4 },
+        { q: '-4+4', a: 0 },
+        { q: '-5+1', a: -4 }
+    ];
+
+    var submitted = false;
+
+    // ----- Audio elements -----
+    var congratsSound = new Audio('sounds/congrats.mp3');
+    var wrongSound = new Audio('sounds/wrong.mp3');
+    var retrySound = new Audio('sounds/retry.mp3');
+
+    function playSound(sound) {
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+    }
+
+    function renderQuestions() {
+        var container = document.getElementById('questions');
+        var html = '';
+        for (var i = 0; i < questions.length; i++) {
+            html += '<div class="question-item">' +
+                '<span class="question-label">' + questions[i].q + ' =</span>' +
+                '<input type="number" class="answer-input" id="input-' + i + '" placeholder="?" data-index="' + i + '">' +
+                '<span class="feedback-icon" id="icon-' + i + '"></span>' +
+                '</div>';
+        }
+        container.innerHTML = html;
+
+        var inputs = document.querySelectorAll('.answer-input');
+        for (var j = 0; j < inputs.length; j++) {
+            inputs[j].addEventListener('input', checkIfAnyAnswered);
+        }
+    }
+
+    function checkIfAnyAnswered() {
+        var inputs = document.querySelectorAll('.answer-input');
+        var hasAnswer = false;
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].value.trim() !== '') {
+                hasAnswer = true;
+                break;
+            }
+        }
+        document.getElementById('checkBtn').disabled = !hasAnswer;
+    }
+
+    function checkAnswers() {
+        if (submitted) return;
+        submitted = true;
+
+        var correct = 0;
+        for (var i = 0; i < questions.length; i++) {
+            var input = document.getElementById('input-' + i);
+            var icon = document.getElementById('icon-' + i);
+            var userAnswer = parseFloat(input.value);
+
+            input.disabled = true;
+
+            if (userAnswer === questions[i].a) {
+                input.classList.add('correct');
+                icon.textContent = '✓';
+                icon.style.color = '#48bb78';
+                icon.classList.add('show');
+                correct++;
+            } else {
+                input.classList.add('incorrect');
+                icon.textContent = '✗';
+                icon.style.color = '#f56565';
+                icon.classList.add('show');
+            }
+        }
+
+        showScore(correct);
+
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('resetBtn').style.display = 'flex';
+
+        // ----- Play sounds -----
+        if (correct === questions.length) {
+            playSound(congratsSound);
+        } else if (correct === 0) {
+            playSound(wrongSound);
+        } else {
+            playSound(retrySound);
+        }
+    }
+
+    function showScore(correct) {
+        var scoreContainer = document.getElementById('scoreContainer');
+        var scoreText = document.getElementById('scoreText');
+        var scoreMessage = document.getElementById('scoreMessage');
+
+        scoreText.textContent = 'Score: ' + correct + '/' + questions.length;
+
+        if (correct === questions.length) {
+            scoreMessage.textContent = '🎉 Perfect! Amazing work!';
+        } else if (correct >= questions.length * 0.7) {
+            scoreMessage.textContent = '👏 Great job! Keep it up!';
+        } else {
+            scoreMessage.textContent = '💪 Keep practicing! You can do it!';
+        }
+
+        scoreContainer.classList.add('show');
+    }
+
+    function resetQuiz() {
+        submitted = false;
+
+        var inputs = document.querySelectorAll('.answer-input');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].value = '';
+            inputs[i].disabled = false;
+            inputs[i].classList.remove('correct', 'incorrect');
+        }
+
+        var icons = document.querySelectorAll('.feedback-icon');
+        for (var j = 0; j < icons.length; j++) {
+            icons[j].classList.remove('show');
+        }
+
+        document.getElementById('scoreContainer').classList.remove('show');
+        document.getElementById('checkBtn').style.display = 'flex';
+        document.getElementById('checkBtn').disabled = true;
+        document.getElementById('resetBtn').style.display = 'none';
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+
+    renderQuestions();
+</script>
+</body>
+</html>

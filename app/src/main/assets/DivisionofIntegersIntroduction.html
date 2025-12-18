@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Division of Integers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00C9A7 0%, #92FE9D 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f1f8e9;
+            border-left: 4px solid #2e7d32;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #2e7d32;
+            font-size: 24px;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #81c784;
+            display: inline-block;
+        }
+
+        .cases-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .case-card {
+            background: linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%);
+            border: 2px solid #2e7d32;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: #2e7d32;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .case-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(46, 125, 50, 0.3);
+        }
+
+        .case-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .case-title {
+            font-weight: 600;
+            color: #2e7d32;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .case-description {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .calculator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .operator {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        button {
+            background: white;
+            color: #f5576c;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .result {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: 700;
+            min-height: 30px;
+        }
+
+        .sign-rules {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .rule-visual {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .rule-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff6f00;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .rule-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 111, 0, 0.2);
+        }
+
+        .rule-formula {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+
+        .rule-result {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #e8f5e9;
+        }
+
+        th {
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f8e9;
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        td:last-child {
+            font-weight: 600;
+            color: #2e7d32;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid #1976d2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+j
+        .tip-box strong {
+            color: #1565c0;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .cases-container {
+                grid-template-columns: 1fr;
+            }
+
+            .rule-visual {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 12px 10px;
+                font-size: 14px;
+            }
+
+            .calculator {
+                gap: 10px;
+            }
+
+            input[type="number"] {
+                width: 80px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Division of Integers</h1>
+    </div>
+
+    <div class="content">
+        <div class="intro">
+            Division of integers involves the grouping of items. It includes both positive numbers and negative numbers.
+            Just like multiplication, the division of integers follows specific sign rules that determine whether your answer will be positive or negative.
+        </div>
+
+        <h2>📋 Three Cases of Integer Division</h2>
+
+        <div class="cases-container">
+            <div class="case-card">
+                <div class="case-icon">➕➗➕</div>
+                <div class="case-title">Positive ÷ Positive</div>
+                <div class="case-description">Dividing two positive numbers always gives a positive result</div>
+            </div>
+
+            <div class="case-card">
+                <div class="case-icon">➖➗➖</div>
+                <div class="case-title">Negative ÷ Negative</div>
+                <div class="case-description">Dividing two negative numbers always gives a positive result</div>
+            </div>
+
+            <div class="case-card">
+                <div class="case-card">
+                    <div class="case-icon">➕➗➖</div>
+                    <div class="case-title">Mixed Signs</div>
+                    <div class="case-description">Dividing numbers with different signs always gives a negative result</div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Quick Tip:</strong> The sign rules for division are the same as multiplication!
+                Same signs = positive result, different signs = negative result.
+            </div>
+
+            <div class="sign-rules">
+                <h3 style="color: #2e7d32; text-align: center; margin-bottom: 20px;">Sign Rule Quick Reference</h3>
+                <div class="rule-visual">
+                    <div class="rule-box">
+                        <div class="rule-formula">+ ÷ + = +</div>
+                        <div class="rule-result">Both positive → Positive</div>
+                    </div>
+                    <div class="rule-box">
+                        <div class="rule-formula">− ÷ − = +</div>
+                        <div class="rule-result">Both negative → Positive</div>
+                    </div>
+                    <div class="rule-box">
+                        <div class="rule-formula">+ ÷ − = −</div>
+                        <div class="rule-result">Mixed signs → Negative</div>
+                    </div>
+                    <div class="rule-box">
+                        <div class="rule-formula">− ÷ + = −</div>
+                        <div class="rule-result">Mixed signs → Negative</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <div class="demo-title">🧮 Try It Yourself!</div>
+                <div class="calculator">
+                    <input type="number" id="num1" value="8" />
+                    <span class="operator">÷</span>
+                    <input type="number" id="num2" value="2" />
+                    <span class="operator">=</span>
+                    <span style="min-width: 60px; font-size: 24px; font-weight: bold;" id="display">?</span>
+                </div>
+                <button onclick="calculate()">Calculate</button>
+                <div class="result" id="result"></div>
+                <div id="explanation" style="margin-top: 15px; font-size: 14px; max-width: 500px; margin-left: auto; margin-right: auto;"></div>
+            </div>
+
+            <h2>📊 Sign Rules for Division of Integers</h2>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Integer's Sign</th>
+                        <th>Answer's Sign</th>
+                        <th>Example</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Positive ÷ Positive</td>
+                        <td>Positive</td>
+                        <td>8 ÷ 2 = 4</td>
+                    </tr>
+                    <tr>
+                        <td>Negative ÷ Positive</td>
+                        <td>Negative</td>
+                        <td>−8 ÷ 2 = −4</td>
+                    </tr>
+                    <tr>
+                        <td>Positive ÷ Negative</td>
+                        <td>Negative</td>
+                        <td>8 ÷ (−2) = −4</td>
+                    </tr>
+                    <tr>
+                        <td>Negative ÷ Negative</td>
+                        <td>Positive</td>
+                        <td>−8 ÷ (−2) = 4</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const n1 = parseFloat(document.getElementById('num1').value);
+            const n2 = parseFloat(document.getElementById('num2').value);
+
+            if (isNaN(n1) || isNaN(n2)) {
+                document.getElementById('result').textContent = 'Please enter valid numbers';
+                document.getElementById('explanation').textContent = '';
+                document.getElementById('display').textContent = '?';
+                return;
+            }
+
+            if (n2 === 0) {
+                document.getElementById('result').textContent = 'Cannot divide by zero!';
+                document.getElementById('explanation').textContent = 'Division by zero is undefined in mathematics.';
+                document.getElementById('display').textContent = '∞';
+                return;
+            }
+
+            const res = n1 / n2;
+
+            document.getElementById('display').textContent = res.toFixed(2);
+            document.getElementById('result').textContent = `${n1} ÷ ${n2} = ${res.toFixed(2)}`;
+
+            // Explanation
+            let explanation = '';
+            if (n1 > 0 && n2 > 0) {
+                explanation = '✓ Positive ÷ Positive = Positive result';
+            } else if (n1 < 0 && n2 < 0) {
+                explanation = '✓ Negative ÷ Negative = Positive result';
+            } else if ((n1 > 0 && n2 < 0) || (n1 < 0 && n2 > 0)) {
+                explanation = '✓ Mixed signs = Negative result';
+            } else {
+                explanation = '✓ Dividing by or from zero';
+            }
+
+            document.getElementById('explanation').textContent = explanation;
+        }
+
+        // Calculate on page load
+        calculate();
+
+        // Add input event listeners for real-time calculation
+        document.getElementById('num1').addEventListener('input', calculate);
+        document.getElementById('num2').addEventListener('input', calculate);
+</script>
+</body>
+</html>

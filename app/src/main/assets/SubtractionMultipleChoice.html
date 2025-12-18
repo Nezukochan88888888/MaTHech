@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Choice Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+        }
+
+        .question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .choice {
+            background: #e5e7eb;
+            padding: 18px 22px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .choice:hover {
+            background: #d1d5db;
+            transform: translateX(5px);
+        }
+
+        .choice:active {
+            transform: scale(0.98);
+        }
+
+        .choice.selected {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            transform: translateX(5px);
+        }
+
+        .choice.correct {
+            background: #d1fae5;
+            border-color: #22c55e;
+            animation: correctPulse 0.5s ease;
+        }
+
+        .choice.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+            animation: shake 0.5s ease;
+        }
+
+        .choice.disabled {
+            pointer-events: none;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .progress-container {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 28px;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+        }
+
+        .btn-submit:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            display: none;
+        }
+
+        .btn-next.show {
+            display: flex;
+        }
+
+        .btn-next:hover {
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .results {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results h2 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .score-text {
+            font-size: 20px;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .btn-retry {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-retry:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-retry:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .question {
+                font-size: 18px;
+                flex-wrap: wrap;
+            }
+
+            .choice {
+                padding: 16px 18px;
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 14px 20px;
+                font-size: 16px;
+            }
+
+            .results h2 {
+                font-size: 28px;
+            }
+
+            .score {
+                font-size: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .question {
+                font-size: 16px;
+            }
+
+            .choice {
+                padding: 14px 16px;
+                font-size: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .results h2 {
+                font-size: 24px;
+            }
+
+            .score {
+                font-size: 36px;
+            }
+
+            .score-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="quizContainer">
+        <div class="question-container">
+            <div class="question">
+                <span id="questionText">What is the result when you add two positive integers?</span>
+                <div class="speaker-icon" onclick="speakQuestion()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="choices" id="choices">
+                <div class="choice" data-answer="correct" onclick="selectChoice(this)">Always positive</div>
+                <div class="choice" data-answer="wrong" onclick="selectChoice(this)">zero</div>
+                <div class="choice" data-answer="wrong" onclick="selectChoice(this)">It depends</div>
+                <div class="choice" data-answer="wrong" onclick="selectChoice(this)">Always negative</div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Question 1 of 5</div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-submit" id="submitBtn" onclick="submitAnswer()" disabled>
+                Submit Answer
+            </button>
+            <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">
+                Next Question →
+            </button>
+        </div>
+    </div>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <div class="score" id="finalScore">0/5</div>
+        <div class="score-text">Correct Answers</div>
+        <button class="btn-retry" onclick="restartQuiz()">Try Again</button>
+    </div>
+</div>
+
+<audio id="correctSound" src="sounds/correct.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="sounds/wrong.mp3" preload="auto"></audio>
+<audio id="congratsSound" src="sounds/congrats.mp3" preload="auto"></audio>
+<audio id="retrySound" src="sounds/retry.mp3" preload="auto"></audio>
+<audio id="tapSound" src="sounds/tap.mp3" preload="auto"></audio>
+
+<script>
+    const questions = [
+        { question: "What is the result when you subtract 0 from any integer?", choices: ["Always 0","The integer itself","Always positive","Always negative"], correct: 1 },
+        { question: "What is the result when you subtract any integer from 0?", choices: ["The additive inverse (opposite) of that integer","Always positive","Always 0","The same integer"], correct: 0 },
+        { question: "How do we subtract integers?", choices: ["By adding the opposite of the subtrahend","By multiplying both integers","By always taking the larger minus smaller","By ignoring the signs"], correct: 0 },
+        { question: "What is the result of 5 − (−3)?", choices: ["2","8","−2","−8"], correct: 1 },
+        { question: "What is the result of −3 − (−5)?", choices: ["−8","8","2","−2"], correct: 2 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedChoice = null;
+    let soundsEnabled = false;
+
+    // Unlock audio on first user interaction and play tap sound
+    document.addEventListener('click', function initAudio(e) {
+        if (!soundsEnabled) {
+            const correct = document.getElementById('correctSound');
+            correct.play().then(() => { correct.pause(); correct.currentTime = 0; }).catch(() => {});
+            soundsEnabled = true;
+
+            // Play tap sound immediately on first click
+            playSound('tapSound');
+
+            // Remove listener so it only runs once
+            document.removeEventListener('click', initAudio);
+        }
+    });
+
+    function playSound(id) {
+        const sound = document.getElementById(id);
+        if (!sound) return;
+
+        // Tap sound always plays; other sounds only if unlocked
+        if (id === 'tapSound' || soundsEnabled) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+    }
+
+    function selectChoice(element) {
+        playSound('tapSound');
+        document.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+        element.classList.add('selected');
+        selectedChoice = element;
+        document.getElementById('submitBtn').disabled = false;
+    }
+
+    function submitAnswer() {
+        if (!selectedChoice) return;
+
+        const choices = document.querySelectorAll('.choice');
+        const correctIndex = questions[currentQuestion].correct;
+        const selectedIndex = Array.from(choices).indexOf(selectedChoice);
+
+        choices.forEach((choice, index) => {
+            choice.classList.add('disabled');
+            if (index === correctIndex) choice.classList.add('correct');
+            else if (choice === selectedChoice && index !== correctIndex) choice.classList.add('incorrect');
+        });
+
+        if (selectedIndex === correctIndex) {
+            score++;
+            playSound('correctSound');
+        } else {
+            playSound('wrongSound');
+        }
+
+        document.getElementById('submitBtn').style.display = 'none';
+        document.getElementById('nextBtn').classList.add('show');
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion >= questions.length) {
+            showResults();
+            return;
+        }
+        loadQuestion();
+        updateProgress();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById('questionText').textContent = q.question;
+
+        const choicesContainer = document.getElementById('choices');
+        choicesContainer.innerHTML = '';
+        q.choices.forEach(choice => {
+            const div = document.createElement('div');
+            div.className = 'choice';
+            div.textContent = choice;
+            div.onclick = () => selectChoice(div);
+            choicesContainer.appendChild(div);
+        });
+
+        selectedChoice = null;
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').style.display = 'flex';
+        document.getElementById('nextBtn').classList.remove('show');
+    }
+
+    function updateProgress() {
+        const progress = ((currentQuestion + 1) / questions.length) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressText').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+    }
+
+    function showResults() {
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('results').classList.add('show');
+
+        const finalScore = document.getElementById('finalScore');
+        finalScore.textContent = `${score}/${questions.length}`;
+
+        if (score === questions.length) {
+            finalScore.textContent = '🎉 ' + finalScore.textContent + " Perfect!";
+            playSound('congratsSound');
+        } else if (score === 0) {
+            playSound('wrongSound');
+        } else {
+            playSound('retrySound');
+        }
+    }
+
+    function restartQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        document.getElementById('quizContainer').style.display = 'block';
+        document.getElementById('results').classList.remove('show');
+        loadQuestion();
+        updateProgress();
+    }
+
+    function speakQuestion() {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(document.getElementById('questionText').textContent);
+            speechSynthesis.speak(utterance);
+        }
+    }
+
+    // Initialize first question
+    loadQuestion();
+    updateProgress();
+</script>
+</body>
+</html>

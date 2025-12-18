@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Math Grid</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            padding: 20px;
+            -webkit-user-select: none;
+            user-select: none;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .directions {
+            background: white;
+            border: 1px solid #00000;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .directions h2 {
+            font-size: 18px;
+            color: #0e0f0f;
+            line-height: 1.4;
+        }
+
+        .main-box {
+    background: transparent;
+    border: 0px solid #000; /* fixed color (your original had 5 zeros — invalid) */
+    border-radius: 15px;    /* ← rounded corners */
+    padding: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+        .problems-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin-bottom: 0px;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 15px;
+            padding: 20px 15px;
+            border: 1px solid #000;
+            background: white;
+            min-height: 80px;
+        }
+
+        .equation {
+            font-size: 22px;
+            font-weight: 700;
+            color: #00000;
+            flex-shrink: 0;
+        }
+
+        .drop-zone {
+            width: 70px;
+            height: 50px;
+            background: #d4d4d4;
+            border: 1px solid #999;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .drop-zone.drag-over {
+            background: #e0e7ff;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .drop-zone.filled {
+            background: #e5e7eb;
+            border-color: #6b7280;
+        }
+
+        .drop-zone.correct {
+            background: #d1fae5;
+            border-color: #22c55e;
+        }
+
+        .drop-zone.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .dragged-answer {
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #00000;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            border-radius: 15px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-top: 1px solid #00000;
+        }
+
+        .answer-choice {
+            background: #d4d4d4;
+            padding: 15px 10px;
+            border: 2px solid #999;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            cursor: move;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: all 0.3s ease;
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .answer-choice:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .answer-choice.dragging {
+            opacity: 0.5;
+        }
+
+        .answer-choice.used {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .check-button {
+    width: 100%;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    /* Gradient background */
+    background: linear-gradient(135deg, #3b82f6 0%, #059669 100%);
+    color: white;
+    margin-top: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .check-button:active {
+            transform: scale(0.98);
+        }
+
+        .retry-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: none;
+        }
+
+        .retry-button.show {
+            display: flex;
+        }
+
+        .results {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .score {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 480px) {
+            .directions h2 {
+                font-size: 16px;
+            }
+
+            .equation {
+                font-size: 18px;
+            }
+
+            .drop-zone {
+                width: 60px;
+                height: 45px;
+            }
+
+            .problem-item {
+                padding: 15px 10px;
+                min-height: 70px;
+            }
+
+            .answers-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .answer-choice {
+                font-size: 18px;
+                padding: 12px 8px;
+                min-height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="directions">
+        <h2>Directions: Drag and drop the correct answer inside the box.</h2>
+    </div>
+
+    <div class="main-box">
+        <div class="problems-grid">
+            <div class="problem-item">
+                <div class="equation">-4×(-7)=</div>
+                <div class="drop-zone" data-answer="28"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">-8×8=</div>
+                <div class="drop-zone" data-answer="-64"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">-9×3=</div>
+                <div class="drop-zone" data-answer="-27"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">-6×(-7)=</div>
+                <div class="drop-zone" data-answer="42"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">-6×8=</div>
+                <div class="drop-zone" data-answer="-48"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">6×(-6)=</div>
+                <div class="drop-zone" data-answer="-36"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">-8×(-5)=</div>
+                <div class="drop-zone" data-answer="40"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">8×(-7)=</div>
+                <div class="drop-zone" data-answer="-56"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">9×(-6)=</div>
+                <div class="drop-zone" data-answer="-54"></div>
+            </div>
+
+            <div class="problem-item">
+                <div class="equation">-7×(-7)=</div>
+                <div class="drop-zone" data-answer="49"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="answers-grid">
+        <div class="answer-choice" draggable="true" data-value="40">40</div>
+        <div class="answer-choice" draggable="true" data-value="28">28</div>
+        <div class="answer-choice" draggable="true" data-value="-36">-36</div>
+        <div class="answer-choice" draggable="true" data-value="42">42</div>
+        <div class="answer-choice" draggable="true" data-value="-3">-3</div>
+        <div class="answer-choice" draggable="true" data-value="-48">-48</div>
+        <div class="answer-choice" draggable="true" data-value="15">15</div>
+        <div class="answer-choice" draggable="true" data-value="-27">-27</div>
+        <div class="answer-choice" draggable="true" data-value="-54">-54</div>
+        <div class="answer-choice" draggable="true" data-value="49">49</div>
+        <div class="answer-choice" draggable="true" data-value="-56">-56</div>
+        <div class="answer-choice" draggable="true" data-value="-64">-64</div>
+    </div>
+
+</div>
+
+<button class="check-button" id="checkBtn" onclick="checkAnswers()">
+    <span>✓</span> Check
+</button>
+
+<button class="check-button retry-button" id="retryBtn" onclick="retryQuiz()">
+    <span>↻</span> Retry
+</button>
+
+<div class="results" id="results">
+    <h2>Your Score</h2>
+    <div class="score" id="score"></div>
+</div>
+</div>
+
+<audio id="dropSound" src="sounds/drop.mp3" preload="auto"></audio>
+<audio id="congratsSound" src="sounds/congrats.mp3" preload="auto"></audio>
+<audio id="retrySound" src="sounds/retry.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="sounds/wrong.mp3" preload="auto"></audio>
+
+<script>
+    let draggedElement = null;
+    let clone = null;
+
+    // ✅ Sound helper
+    function playSound(id) {
+        const sound = document.getElementById(id);
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+    }
+
+    // Initialize draggables
+    document.querySelectorAll('.answer-choice').forEach(choice => {
+        choice.addEventListener('dragstart', handleDragStart);
+        choice.addEventListener('dragend', handleDragEnd);
+        choice.addEventListener('touchstart', handleTouchStart, { passive: false });
+        choice.addEventListener('touchmove', handleTouchMove, { passive: false });
+        choice.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+        if (!choice.dataset.originalParent) {
+            choice.dataset.originalParent = choice.parentElement.id;
+        }
+    });
+
+    // Initialize drop zones
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', handleDragOver);
+        zone.addEventListener('drop', handleDrop);
+        zone.addEventListener('dragleave', handleDragLeave);
+        zone.addEventListener('click', handleDropZoneClick);
+    });
+
+    // ----- Drag & Drop Handlers -----
+    function handleDragStart(e) {
+        if (this.classList.contains('used')) { e.preventDefault(); return; }
+        draggedElement = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragEnd(e) {
+        this.classList.remove('dragging');
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        if (!this.classList.contains('filled')) this.classList.add('drag-over');
+        e.dataTransfer.dropEffect = 'move';
+    }
+
+    function handleDragLeave(e) {
+        this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+
+        if (draggedElement && !this.classList.contains('filled')) {
+            const value = draggedElement.dataset.value;
+            this.innerHTML = `<span class="dragged-answer" data-value="${value}">${value}</span>`;
+            this.classList.add('filled');
+            draggedElement.classList.add('used');
+            draggedElement.style.opacity = '0';
+            draggedElement = null;
+
+            playSound("dropSound");
+        }
+    }
+
+    function handleDropZoneClick(e) {
+        if (this.classList.contains('filled')) {
+            const value = this.querySelector('.dragged-answer').dataset.value;
+            this.innerHTML = '';
+            this.classList.remove('filled', 'correct', 'incorrect');
+
+            const answerChoice = document.querySelector(`.answer-choice[data-value="${value}"]`);
+            if (answerChoice) {
+                answerChoice.classList.remove('used');
+                answerChoice.style.opacity = '1';
+                const parentEl = document.getElementById(answerChoice.dataset.originalParent);
+                if (parentEl && !parentEl.contains(answerChoice)) parentEl.appendChild(answerChoice);
+            }
+        }
+    }
+
+    // ----- Touch Handlers -----
+    function handleTouchStart(e) {
+        if (this.classList.contains('used')) { e.preventDefault(); return; }
+
+        e.preventDefault();
+        draggedElement = this;
+        const touch = e.touches[0];
+
+        clone = this.cloneNode(true);
+        clone.style.position = 'fixed';
+        clone.style.zIndex = '10000';
+        clone.style.pointerEvents = 'none';
+        clone.style.opacity = '0.9';
+        clone.style.width = this.offsetWidth + 'px';
+        clone.style.left = (touch.clientX - this.offsetWidth / 2) + 'px';
+        clone.style.top = (touch.clientY - clone.offsetHeight / 2) + 'px';
+        document.body.appendChild(clone);
+
+        this.style.opacity = '0';
+    }
+
+    function handleTouchMove(e) {
+        if (!draggedElement || !clone) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        clone.style.left = (touch.clientX - clone.offsetWidth / 2) + 'px';
+        clone.style.top = (touch.clientY - clone.offsetHeight / 2) + 'px';
+
+        clone.style.display = 'none';
+        const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+        clone.style.display = 'block';
+
+        document.querySelectorAll('.drop-zone').forEach(zone => zone.classList.remove('drag-over'));
+        if (elementBelow && elementBelow.classList.contains('drop-zone') && !elementBelow.classList.contains('filled')) {
+            elementBelow.classList.add('drag-over');
+        }
+    }
+
+    function handleTouchEnd(e) {
+        if (!draggedElement) return;
+
+        const touch = e.changedTouches[0];
+        if (clone) clone.style.display = 'none';
+        const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+
+        if (elementBelow && elementBelow.classList.contains('drop-zone') && !elementBelow.classList.contains('filled')) {
+            const value = draggedElement.dataset.value;
+            elementBelow.innerHTML = `<span class="dragged-answer" data-value="${value}">${value}</span>`;
+            elementBelow.classList.add('filled');
+            elementBelow.classList.remove('drag-over');
+            draggedElement.classList.add('used');
+            draggedElement.style.opacity = '0';
+            playSound("dropSound");
+        } else {
+            draggedElement.style.opacity = '1';
+        }
+
+        if (clone) { clone.remove(); clone = null; }
+        draggedElement = null;
+        document.querySelectorAll('.drop-zone').forEach(zone => zone.classList.remove('drag-over'));
+    }
+
+    // ----- Check Answers -----
+    function checkAnswers() {
+        let correct = 0, total = 0;
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            total++;
+            const correctAnswer = zone.dataset.answer;
+            const answerElement = zone.querySelector('.dragged-answer');
+
+            if (answerElement) {
+                const userAnswer = answerElement.dataset.value;
+                if (userAnswer === correctAnswer) {
+                    zone.classList.add('correct');
+                    zone.classList.remove('incorrect');
+                    correct++;
+                } else {
+                    zone.classList.add('incorrect');
+                    zone.classList.remove('correct');
+                }
+            } else {
+                zone.classList.remove('correct', 'incorrect');
+            }
+        });
+
+        const resultsDiv = document.getElementById('results');
+        const scoreDiv = document.getElementById('score');
+        const checkBtn = document.getElementById('checkBtn');
+        const retryBtn = document.getElementById('retryBtn');
+
+        if (correct === total && total > 0) {
+            scoreDiv.innerHTML = '🎉 Perfect! ' + correct + '/' + total;
+            playSound("congratsSound"); // all correct
+        } else if (correct > 0) {
+            scoreDiv.innerHTML = correct + '/' + total + ' correct';
+            playSound("retrySound"); // some correct
+        } else {
+            scoreDiv.innerHTML = correct + '/' + total + ' correct';
+            playSound("wrongSound"); // all wrong (0/total)
+        }
+
+        resultsDiv.classList.add('show');
+        checkBtn.style.display = 'none';
+        retryBtn.classList.add('show');
+    }
+
+    // ----- Retry Quiz -----
+    function retryQuiz() {
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.innerHTML = '';
+            zone.classList.remove('filled', 'correct', 'incorrect', 'drag-over');
+        });
+
+        document.querySelectorAll('.answer-choice').forEach(choice => {
+            choice.classList.remove('used', 'dragging');
+            choice.style.opacity = '1';
+            const parentEl = document.getElementById(choice.dataset.originalParent);
+            if (parentEl && !parentEl.contains(choice)) parentEl.appendChild(choice);
+        });
+
+        document.getElementById('results').classList.remove('show');
+        document.getElementById('checkBtn').style.display = 'flex';
+        document.getElementById('retryBtn').classList.remove('show');
+    }
+</script>
+</body>
+</html>

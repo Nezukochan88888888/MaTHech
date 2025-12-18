@@ -1,0 +1,61 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- App basic info -->
+    <string name="app_name">MaTHech</string>
+    <string name="v1_0">v1.0</string>
+
+    <!-- Navigation labels -->
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
+
+    <!-- Titles -->
+    <string name="table_of_contents">Table of Contents</string>
+    <string name="toc">TOC</string>
+    <string name="mathact_logo">MathAct Logo</string>
+
+    <!-- Splash screen messages -->
+    <string name="app_welcome_title">Welcome to MaTHech!</string>
+    <string name="app_welcome_message">
+        Created by Ms. Dyanne S. Roncales, this app aims to enhance students\' math skills
+        and problem-solving abilities through a variety of engaging activities.
+        The carefully crafted exercises promote critical thinking and build confidence,
+        making the learning process enjoyable and effective.
+
+        \n\n📘 This educational tool was created to help address the PISA numeracy gap
+        by offering fun, offline, and inclusive learning opportunities — especially
+        for areas with limited internet access.
+
+        \n\n🔒 Data Privacy Notice:
+        MaTHech does not collect, share, or transmit any personal data.
+        All learning progress is stored locally on your device in full compliance
+        with the Data Privacy Act of 2012 (Republic Act No. 10173).
+    </string>
+
+    <!-- Standalone short privacy note (for reuse if needed) -->
+    <string name="privacy_note">
+        This app does not collect or share any personal data.
+        All progress is stored locally on your device.
+    </string>
+
+    <!-- Buttons -->
+    <string name="start">START</string>
+
+    <!-- Lessons -->
+    <string name="addition_of_integers">Addition of Integers</string>
+    <string name="subtraction_of_integers">Subtraction of Integers</string>
+    <string name="multiplication_of_integers">Multiplication of Integers</string>
+    <string name="division_of_integers">Division of Integers</string>
+    <string name="bubble_and_integers">Bubble and Integers</string>
+    <string name="bouncing_integers">Bouncing Integers</string>
+    <string name="snake_and_integers">Snake and Integers</string>
+
+    <!-- Other sections -->
+    <string name="geometry">Geometry</string>
+    <string name="polygon">Polygon</string>
+    <string name="page_3">Page 3</string>
+
+</resources>

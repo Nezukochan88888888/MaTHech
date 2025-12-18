@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Ready for the Activity</title>
+    <style>
+        html, body {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
+          font-family: "Poppins", sans-serif;
+          text-align: center;
+          background: transparent; /* Keep Android background visible */
+        }
+
+        h1 {
+          font-size: 2.5em;
+          color: #00C9A7;
+          margin-top: 20vh;
+          animation: beat 1.2s infinite alternate;
+          position: relative;
+          z-index: 2;
+        }
+
+        @keyframes beat {
+          0%   { transform: scale(1); }
+          100% { transform: scale(1.15); }
+        }
+
+        p {
+          font-size: 1.2em;
+          color: #333;
+          margin: 15px 20px;
+          line-height: 1.6;
+          position: relative;
+          z-index: 2;
+        }
+
+        .highlight {
+          font-weight: bold;
+          color: #00C9A7;
+        }
+
+        .btn {
+          display: inline-block;
+          padding: 14px 28px;
+          font-size: 1.1em;
+          font-weight: bold;
+          color: white;
+          background: #00C9A7;
+          border: none;
+          border-radius: 30px;
+          cursor: pointer;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+          position: relative;
+          z-index: 2;
+          margin-top: 20px;
+          transition: all 0.3s ease;
+          animation: pulse 2s infinite alternate;
+        }
+
+        .btn:hover {
+          background: #00C9A7;
+          transform: translateY(-3px);
+        }
+
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          100% { transform: scale(1.05); }
+        }
+
+        /* Floating ÷ symbols */
+        .symbol {
+          position: absolute;
+          color: rgba(45, 108, 223, 0.25);
+          font-weight: bold;
+          animation: float linear infinite;
+          z-index: 1;
+        }
+
+        @keyframes float {
+          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+          30% { opacity: 1; }
+          100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>✨ Get Ready! ✨</h1>
+
+<p>
+    You’ve just learned <span class="highlight">dividing integers</span>.
+</p>
+
+<p>
+    Now, it’s time to put your learning into action!
+    Don’t worry — this activity is all about practice.
+    Every step brings you closer to mastering integer division.
+</p>
+
+<button id="startBtn" class="btn">Start Activity 🚀</button>
+
+<script>
+    function createSymbol() {
+      const symbol = document.createElement('div');
+      symbol.classList.add('symbol');
+      symbol.textContent = '÷';  // Division sign
+
+      // Random horizontal position
+      symbol.style.left = Math.random() * 90 + '%';
+
+      // Random font size
+      symbol.style.fontSize = (1 + Math.random() * 3) + "em";
+
+      // Random float duration
+      const duration = 3 + Math.random() * 5; // 3–8 seconds
+      symbol.style.animationDuration = duration + "s";
+
+      document.body.appendChild(symbol);
+
+      // Remove after animation
+      setTimeout(() => symbol.remove(), duration * 1000);
+    }
+
+    // Initial floating symbols
+    for (let i = 0; i < 6; i++) createSymbol();
+
+    // Continuous floating symbols
+    setInterval(createSymbol, 800);
+
+    // Android interface
+    document.getElementById('startBtn').addEventListener('click', () => {
+      if (window.Android && window.Android.goNextPage) {
+        window.Android.goNextPage();
+      }
+    });
+</script>
+
+</body>
+</html>

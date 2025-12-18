@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Math Challenge - Negative Answers</title>
+    <style>
+        :root {
+            --primary-start: #00C9A7;
+            --primary-end: #92FE9D;
+            --correct: #3b82f6;
+            --correct-border: #059669;
+            --incorrect: #ef4444;
+            --incorrect-border: #dc2626;
+            --missed: #fef3c7;
+            --missed-text: #92400e;
+            --missed-border: #f59e0b;
+            --neutral: #6b7280;
+            --light-gray: #ddd;
+            --dark-text: #333;
+            --medium-text: #666;
+            --card-radius: 15px;
+            --container-radius: 20px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+            min-height: 100vh;
+            padding: 4vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark-text);
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            background: white;
+            padding: 6vw;
+            border-radius: var(--container-radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 5vw;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            margin-bottom: 2vw;
+            font-weight: 700;
+        }
+
+        .instructions {
+            color: var(--medium-text);
+            font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+            line-height: 1.4;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3vw;
+            margin-bottom: 5vw;
+        }
+
+        .card {
+            background: white;
+            padding: 8vw 4vw;
+            border-radius: var(--card-radius);
+            border: 3px solid var(--light-gray);
+            font-size: clamp(1.3rem, 5vw, 2rem);
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (hover: hover) {
+            .card:hover:not(.disabled) {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            }
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card.selected {
+            background: var(--primary-start);
+            color: white;
+            border-color: var(--primary-end);
+            transform: scale(1.02);
+        }
+
+        .card.correct {
+            background: var(--correct);
+            color: white;
+            border-color: var(--correct-border);
+        }
+
+        .card.incorrect {
+            background: var(--incorrect);
+            color: white;
+            border-color: var(--incorrect-border);
+        }
+
+        .card.missed {
+            background: var(--missed);
+            color: var(--missed-text);
+            border-color: var(--missed-border);
+        }
+
+        .card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: clamp(1rem, 4vw, 1.5rem);
+        }
+
+        .button {
+            width: 100%;
+            padding: 5vw;
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            font-weight: bold;
+            border: none;
+            border-radius: var(--card-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            touch-action: manipulation;
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        .check-btn {
+            background: var(--correct);
+            color: white;
+        }
+
+        .reset-btn {
+            background: var(--neutral);
+            color: white;
+        }
+
+        .results {
+            background: white;
+            padding: 6vw;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 4vw;
+        }
+
+        .results h2 {
+            margin-bottom: 4vw;
+            font-size: clamp(1.3rem, 5vw, 2rem);
+        }
+
+        .results ul {
+            list-style: none;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+            margin-bottom: 3vw;
+        }
+
+        .result-label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .result-label.correct { color: var(--correct); }
+        .result-label.incorrect { color: var(--incorrect); }
+        .result-label.missed { color: var(--missed-border); }
+
+        .perfect {
+            margin-top: 4vw;
+            font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+            font-weight: bold;
+            color: var(--correct);
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (min-width: 600px) {
+            body { padding: 20px; }
+            .header { padding: 30px; margin-bottom: 30px; }
+            h1 { margin-bottom: 10px; }
+            .grid { gap: 20px; margin-bottom: 30px; }
+            .card { padding: 40px 20px; }
+            .button { padding: 20px; }
+            .results { padding: 30px; margin-bottom: 20px; }
+            .results h2 { margin-bottom: 20px; }
+            .result-item { margin-bottom: 15px; }
+            .perfect { margin-top: 20px; }
+        }
+
+        @media (max-width: 360px) {
+            .grid { gap: 2.5vw; }
+            .card { padding: 7vw 3vw; min-height: 90px; }
+            .icon { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Math Challenge</h1>
+        <p class="instructions">Click or tap the expressions that result in a positive number.</p>
+    </header>
+
+    <main>
+        <div class="grid" id="grid"></div>
+
+        <button class="button check-btn" id="checkBtn">Check Answers</button>
+
+        <div class="results hidden" id="results">
+            <h2>Results</h2>
+            <ul>
+                <li class="result-item">
+                    <span class="result-label correct">✓ Correct:</span>
+                    <span id="correctCount"></span>
+                </li>
+                <li class="result-item">
+                    <span class="result-label incorrect">✗ Incorrect:</span>
+                    <span id="incorrectCount"></span>
+                </li>
+                <li class="result-item">
+                    <span class="result-label missed">⊙ Missed:</span>
+                    <span id="missedCount"></span>
+                </li>
+            </ul>
+            <div class="perfect hidden" id="perfectMsg">Perfect Score! 🎉</div>
+        </div>
+
+        <button class="button reset-btn hidden" id="resetBtn">Try Again</button>
+    </main>
+</div>
+
+<audio id="tapSound" src="sounds/tap.mp3" preload="auto"></audio>
+<audio id="congratsSound" src="sounds/congrats.mp3" preload="auto"></audio>
+<audio id="retrySound" src="sounds/retry.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="sounds/wrong.mp3" preload="auto"></audio>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('grid');
+        const checkBtn = document.getElementById('checkBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultsDiv = document.getElementById('results');
+        const perfectMsg = document.getElementById('perfectMsg');
+        const correctCountSpan = document.getElementById('correctCount');
+        const incorrectCountSpan = document.getElementById('incorrectCount');
+        const missedCountSpan = document.getElementById('missedCount');
+
+        let expressions = [];
+        let cardElements = [];
+        let selectedIndices = new Set();
+        let isShowingResults = false;
+
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(() => {});
+            }
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function makeExpression(wantPositive) {
+            let num1, num2, answer;
+            if (wantPositive) {
+                if (Math.random() < 0.5) {
+                    num2 = -(Math.floor(Math.random() * 9) + 1);
+                    answer = Math.floor(Math.random() * 10) + 1;
+                    num1 = num2 * answer;
+                } else {
+                    num2 = Math.floor(Math.random() * 9) + 1;
+                    answer = Math.floor(Math.random() * 10) + 1;
+                    num1 = -(Math.floor(Math.random() * 10) + 1) * Math.sign(answer);
+                    num1 = num1 === 0 ? -1 * num2 : num1;
+                    num1 = num1 * num2 > 0 ? num1 : -num1;
+                }
+            } else {
+                if (Math.random() < 0.5) {
+                    num2 = Math.floor(Math.random() * 9) + 1;
+                    answer = -(Math.floor(Math.random() * 10) + 1);
+                    num1 = num2 * answer;
+                } else {
+                    num2 = -(Math.floor(Math.random() * 9) + 1);
+                    answer = -(Math.floor(Math.random() * 10) + 1);
+                    num1 = num2 * answer;
+                }
+            }
+            const exprText = num2 < 0 ? `${num1} ÷ (${num2})` : `${num1} ÷ ${num2}`;
+            return { text: exprText, num1, num2, answer, isPositive: answer > 0 };
+        }
+
+        function generateProblems(count = 10) {
+            const problems = [];
+            const half = Math.floor(count / 2);
+            while (problems.filter(p => p.isPositive).length < half) problems.push(makeExpression(true));
+            while (problems.filter(p => !p.isPositive).length < half) problems.push(makeExpression(false));
+            return shuffleArray(problems);
+        }
+
+        function toggleSelect(index) {
+            if (isShowingResults) return;
+            const card = cardElements[index];
+            playSound('tapSound');
+            if (selectedIndices.has(index)) {
+                selectedIndices.delete(index);
+                card.classList.remove('selected');
+            } else {
+                selectedIndices.add(index);
+                card.classList.add('selected');
+            }
+        }
+
+        function checkAnswers() {
+            isShowingResults = true;
+            let correctCount = 0, incorrectCount = 0, missedCount = 0;
+            const totalPositive = expressions.filter(e => e.isPositive).length;
+
+            expressions.forEach((expr, index) => {
+                const card = cardElements[index];
+                const isSelected = selectedIndices.has(index);
+                card.classList.remove('selected');
+                card.classList.add('disabled');
+                const resultText = ` = ${expr.answer}`;
+
+                if (isSelected && expr.isPositive) {
+                    card.classList.add('correct');
+                    card.innerHTML += ` <span class="icon">✓</span> ${resultText}`;
+                    correctCount++;
+                } else if (isSelected && !expr.isPositive) {
+                    card.classList.add('incorrect');
+                    card.innerHTML += ` <span class="icon">✗</span> ${resultText}`;
+                    incorrectCount++;
+                } else if (!isSelected && expr.isPositive) {
+                    card.classList.add('missed');
+                    card.innerHTML += ` <span class="icon">⚠</span> ${resultText}`;
+                    missedCount++;
+                } else {
+                    card.innerHTML += ` ${resultText}`;
+                }
+            });
+
+            correctCountSpan.textContent = `${correctCount} / ${totalPositive}`;
+            incorrectCountSpan.textContent = incorrectCount;
+            missedCountSpan.textContent = missedCount;
+
+            checkBtn.classList.add('hidden');
+            resultsDiv.classList.remove('hidden');
+            resetBtn.classList.remove('hidden');
+
+            if (correctCount === totalPositive && incorrectCount === 0) playSound('congratsSound');
+            else if (correctCount > 0) playSound('retrySound');
+            else playSound('wrongSound');
+        }
+
+        function reset() {
+            isShowingResults = false;
+            selectedIndices.clear();
+            grid.innerHTML = '';
+            cardElements = [];
+            checkBtn.classList.remove('hidden');
+            resultsDiv.classList.add('hidden');
+            resetBtn.classList.add('hidden');
+            perfectMsg.classList.add('hidden');
+            init();
+        }
+
+        function init() {
+            expressions = generateProblems(10);
+            expressions.forEach((expr, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = expr.text;
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.addEventListener('click', () => toggleSelect(index));
+                card.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSelect(index); }
+                });
+                grid.appendChild(card);
+                cardElements.push(card);
+            });
+        }
+
+        checkBtn.addEventListener('click', checkAnswers);
+        resetBtn.addEventListener('click', reset);
+
+        init();
+    });
+</script>
+</body>
+</html>

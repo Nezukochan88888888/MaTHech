@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Gradient Background -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_background" />
+
+    <!-- Main Centered Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp">
+
+        <!-- Logo Container with Card Effect -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="48dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:contentDescription="@string/mathact_logo"
+                android:src="@drawable/math_logo"
+                android:padding="24dp"
+                android:scaleType="fitCenter" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Welcome Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome to MaTHech"
+            android:textSize="28sp"
+            android:textColor="#064780"
+            android:textStyle="bold"
+            android:fontFamily="@font/custom_font"
+            android:layout_marginBottom="8dp"
+            android:letterSpacing="0.02" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Master integers with interactive learning"
+            android:textSize="16sp"
+            android:textColor="#5A6C7D"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:alpha="0.9" />
+
+        <!-- Start Button with Material Design -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/startButton"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:minWidth="200dp"
+            android:backgroundTint="#064780"
+            android:fontFamily="@font/custom_font"
+            android:letterSpacing="0.05"
+            android:onClick="startApp"
+            android:paddingHorizontal="40dp"
+            android:text="@string/start"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="32dp"
+            app:elevation="6dp"
+            app:icon="@drawable/ic_arrow_forward"
+            app:iconGravity="end"
+            app:iconPadding="8dp"
+            app:iconTint="#FFFFFF"
+            app:rippleColor="#FFFFFF" />
+
+    </LinearLayout>
+
+    <!-- Version Label with Enhanced Styling -->
+    <TextView
+        android:id="@+id/versionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/v1_0"
+        android:textColor="#5A6C7D"
+        android:textSize="12sp"
+        android:alpha="0.6"
+        android:fontFamily="sans-serif-medium" />
+
+</FrameLayout>

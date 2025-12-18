@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme -->
+    <style name="Base.Theme.Mathec" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- ✅ Hide the status bar -->
+        <item name="android:windowFullscreen">true</item>
+
+        <!-- ✅ Use white theme instead of blue -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/white</item>
+        <item name="colorSecondary">@color/white</item>
+
+        <!-- ✅ Ensure text and icons are visible -->
+        <item name="colorOnPrimary">#000000</item> <!-- Text on white buttons -->
+        <item name="colorOnSurface">#000000</item> <!-- Dialog title/message -->
+    </style>
+
+    <!-- ✅ Corrected parent name -->
+    <style name="Theme.MaTHech" parent="Base.Theme.Mathec" />
+
+    <!-- ✅ Optional: Dialog theme override to remove tint -->
+    <style name="WhiteAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorOnSurface">#000000</item>
+    </style>
+
+</resources>

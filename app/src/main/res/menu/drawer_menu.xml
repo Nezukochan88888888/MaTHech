@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_page1" android:title="Page 1"/>
+    <item android:id="@+id/nav_page2" android:title="Page 2"/>
+    <item android:id="@+id/nav_page3" android:title="Page 3"/>
+    <item android:id="@+id/nav_table_of_contents" android:title="Table of Contents"/>
+
+    <!-- New test page -->
+    <item android:id="@+id/nav_soundtest" android:title="Sound Test"/>
+</menu>

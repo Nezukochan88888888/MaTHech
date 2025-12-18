@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edge Sound Unlock Test</title>
+</head>
+<body>
+<h2>Edge Sound Unlock Test</h2>
+
+<audio id="correctSound" src="sounds/correct.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="sounds/wrong.mp3" preload="auto"></audio>
+
+<button id="btnCorrect">Play Correct</button>
+<button id="btnWrong">Play Wrong</button>
+
+<script>
+    function playSound(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.currentTime = 0;
+      el.play().catch(err => console.log("Play blocked:", err));
+    }
+
+    // Play on button click (always a valid user gesture)
+    document.getElementById("btnCorrect").addEventListener("click", () => playSound("correctSound"));
+    document.getElementById("btnWrong").addEventListener("click", () => playSound("wrongSound"));
+</script>
+</body>
+</html>

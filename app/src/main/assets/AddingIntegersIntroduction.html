@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Adding Integers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0fdf4;
+            border-left: 4px solid #27ae60;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #27ae60;
+            font-size: 24px;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #38ef7d;
+            display: inline-block;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .rule-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #27ae60;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #27ae60;
+        }
+
+        .rule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .rule-card strong {
+            color: #27ae60;
+            font-size: 18px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .rule-card .example {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .calculator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .operator {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        button {
+            background: white;
+            color: #27ae60;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .result {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: 700;
+            min-height: 30px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #e8f5e9;
+        }
+
+        th {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f0fdf4;
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.15);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        td:last-child {
+            font-weight: 600;
+            color: #27ae60;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+        }
+
+        .visual-helper {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .number-line-container {
+            position: relative;
+            max-width: 100%;
+            padding: 40px 20px;
+            margin: 0 auto;
+        }
+
+        .number-line-wrapper {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .main-line {
+            position: absolute;
+            top: 50px;
+            left: 5%;
+            right: 5%;
+            height: 3px;
+            background: #4b5563;
+        }
+
+        .left-arrow {
+            position: absolute;
+            left: 4%;
+            top: 43.5px; /* Centered vertically */
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 15px solid #4b5563;
+        }
+
+        .right-arrow {
+            position: absolute;
+            right: 4%;
+            top: 43.5px; /* Centered vertically */
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: 15px solid #4b5563;
+        }
+
+        .number-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 0;
+            width: 90%;
+        }
+
+        .number-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tick {
+            width: 2px;
+            height: 15px;
+            background: #4b5563;
+            margin-bottom: 5px;
+            margin-top: 43px;
+        }
+
+        .number-label {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 5px;
+            white-space: nowrap;
+        }
+
+        .negative-label {
+            color: #d97706;
+        }
+
+        .zero-label {
+            color: #000;
+            font-size: 20px;
+        }
+
+        .positive-label {
+            color: #2563eb;
+        }
+
+        .origin-marker {
+            position: absolute;
+            top: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #f97316;
+            font-weight: 700;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .origin-arrow {
+            position: absolute;
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid #f97316;
+        }
+
+        .section-labels {
+            position: absolute;
+            top: 110px;
+            left: 5%;
+            right: 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f97316;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .left-section-arrow {
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 10px solid #f97316;
+            flex-shrink: 0;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f97316;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .right-section-arrow {
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #f97316;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 12px 10px;
+                font-size: 14px;
+            }
+
+            .calculator {
+                gap: 10px;
+            }
+
+            input[type="number"] {
+                width: 80px;
+                font-size: 16px;
+            }
+
+            .visual-helper {
+                padding: 20px 10px;
+            }
+
+            .number-line-container {
+                padding: 30px 10px;
+            }
+
+            .number-line-wrapper {
+                max-width: 100%;
+            }
+
+            .number-label {
+                font-size: 14px;
+            }
+
+            .zero-label {
+                font-size: 16px;
+            }
+
+            .origin-marker {
+                font-size: 12px;
+            }
+
+            .left-section, .right-section {
+                font-size: 11px;
+                gap: 5px;
+            }
+
+            .left-section span, .right-section span {
+                max-width: 100px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .number-label {
+                font-size: 12px;
+            }
+
+            .zero-label {
+                font-size: 14px;
+            }
+
+            .origin-marker {
+                font-size: 10px;
+            }
+
+            .left-section, .right-section {
+                font-size: 9px;
+                gap: 3px;
+            }
+
+            .tick {
+                height: 12px;
+                margin-top: 45px;
+            }
+
+            .tick[style*="height: 20px"] {
+                height: 16px !important;
+                margin-top: 43px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Adding Integers</h1>
+    </div>
+
+    <div class="content">
+        <div class="intro">
+            Adding integers is the process of finding the sum of two or more integers. It may result in an increase or a decrease in value,
+            depending on whether the integers are positive, negative, or a mixture.
+        </div>
+
+        <h2>📚 Rules for Adding Integers</h2>
+
+        <div class="rules-grid">
+            <div class="rule-card">
+                <strong>Rule 1: Additive Inverse</strong>
+                The sum of an integer and its additive inverse is 0.
+                <div class="example">2 + (−2) = 0</div>
+            </div>
+
+            <div class="rule-card">
+                <strong>Rule 2: Positive + Positive</strong>
+                Adding two positive integers always results in a positive value.
+                <div class="example">3 + 3 = 6</div>
+            </div>
+
+            <div class="rule-card">
+                <strong>Rule 3: Negative + Negative</strong>
+                Adding two negative integers always results in a negative number.
+                <div class="example">−5 + (−5) = −10</div>
+            </div>
+
+            <div class="rule-card">
+                <strong>Rule 4: Adding Zero</strong>
+                Adding integers with 0 results in the same number.
+                <div class="example">4 + 0 = 4, −2 + 0 = −2</div>
+            </div>
+
+            <div class="rule-card">
+                <strong>Rule 5: Different Signs</strong>
+                If the signs are different, subtract and take the sign of the number with the larger value.
+                <div class="example">−7 + 3 = −4</div>
+            </div>
+        </div>
+
+        <div class="visual-helper">
+            <h3 style="color: #27ae60; text-align: center; margin-bottom: -50px;">Visual Number Line</h3>
+            <div class="number-line-container">
+                <div class="number-line-wrapper">
+                    <div class="main-line"></div>
+                    <div class="left-arrow"></div>
+                    <div class="right-arrow"></div>
+
+                    <div class="number-line">
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label negative-label">-5</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label negative-label">-4</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label negative-label">-3</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label negative-label">-2</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label negative-label">-1</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick" style="height: 20px; background: #000; width: 3px; margin-top: 41px;"></div>
+                            <div class="number-label zero-label">0</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label positive-label">1</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label positive-label">2</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label positive-label">3</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label positive-label">4</div>
+                        </div>
+                        <div class="number-item">
+                            <div class="tick"></div>
+                            <div class="number-label positive-label">5</div>
+                        </div>
+                    </div>
+
+                    <div class="origin-arrow"></div>
+                    <div class="origin-marker">Origin</div>
+
+                    <div class="section-labels">
+                        <div class="left-section">
+                            <div class="left-section-arrow"></div>
+                            <span>Negative numbers</span>
+                        </div>
+                        <div class="right-section">
+                            <span>Positive numbers</span>
+                            <div class="right-section-arrow"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; color: #666; margin-top: 25px; font-size: 14px;">
+                Adding positive numbers moves right on the line, adding negative numbers moves left
+            </p>
+        </div>
+
+        <div class="interactive-demo">
+            <div class="demo-title">🧮 Try It Yourself!</div>
+            <div class="calculator">
+                <input type="number" id="num1" value="3" />
+                <span class="operator">+</span>
+                <input type="number" id="num2" value="4" />
+                <span class="operator">=</span>
+                <span style="min-width: 60px; font-size: 24px; font-weight: bold;" id="display">?</span>
+            </div>
+            <button onclick="calculate()">Calculate</button>
+            <div class="result" id="result"></div>
+        </div>
+
+        <h2>📊 Examples by Sign Combination</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Integer's Sign</th>
+                    <th>Operation Type</th>
+                    <th>Example</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Positive + Positive</td>
+                    <td>ADDITION</td>
+                    <td>3 + 4 = 7</td>
+                </tr>
+                <tr>
+                    <td>Positive + Negative</td>
+                    <td>SUBTRACTION</td>
+                    <td>3 + (−4) = −1</td>
+                </tr>
+                <tr>
+                    <td>Negative + Positive</td>
+                    <td>SUBTRACTION</td>
+                    <td>−3 + 4 = 1</td>
+                </tr>
+                <tr>
+                    <td>Negative + Negative</td>
+                    <td>ADDITION</td>
+                    <td>−3 + (−3) = −6</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const n1 = parseFloat(document.getElementById('num1').value) || 0;
+        const n2 = parseFloat(document.getElementById('num2').value) || 0;
+        const res = n1 + n2;
+
+        document.getElementById('display').textContent = res;
+        document.getElementById('result').textContent = `${n1} + ${n2} = ${res}`;
+    }
+
+    // Calculate on page load
+    calculate();
+
+    // Add input event listeners for real-time calculation
+    document.getElementById('num1').addEventListener('input', calculate);
+    document.getElementById('num2').addEventListener('input', calculate);
+</script>
+
+</body>
+</html>

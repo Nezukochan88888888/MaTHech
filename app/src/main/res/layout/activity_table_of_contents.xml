@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TableOfContentsActivity">
+
+    <!-- Background image with reduced opacity -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_image"
+        android:alpha="0.2" />
+
+    <!-- Gradient background overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_background" />
+
+    <!-- Main content container -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp">
+
+            <!-- Enhanced Title Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="#F5FFFFFF"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="28dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📚"
+                        android:textSize="56sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:text="@string/table_of_contents"
+                        android:textColor="#1A237E"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.02" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Choose a topic to explore"
+                        android:textColor="#5C6BC0"
+                        android:textSize="15sp"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Learning Topics Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="#E6FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="📖 Learning Topics"
+                    android:textColor="#1A237E"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Topics Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp">
+
+                <!-- Addition Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnMain"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#4CAF50"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="0.01"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:stateListAnimator="@null"
+                        android:text="➕  Addition of Integers"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Subtraction Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnPage8"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#764ba2"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="0.01"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:stateListAnimator="@null"
+                        android:text="➖  Subtraction of Integers"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Multiplication Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnPage15"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#FF9800"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="✖️  Multiplication of Integers"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:letterSpacing="0.01"
+                        android:stateListAnimator="@null" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Division Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnPage22"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#00897B"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="➗  Division of Integers"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:letterSpacing="0.01"
+                        android:stateListAnimator="@null" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Games Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="#E6FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="🎮 Interactive Activity &amp; Games"
+                    android:textColor="#1A237E"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Games Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp">
+
+                <!-- Snake Game Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnInteractiveline"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#0091EA"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="0.01"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:stateListAnimator="@null"
+                        android:text="📏  Interactive Number Line"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Bouncing Integers Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnSnakegame"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#E91E63"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="🐍  Snake &amp; Integers"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:letterSpacing="0.01"
+                        android:stateListAnimator="@null" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Bubble Game Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnBubblegame"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#3F51B5"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="🫧  Bubble &amp; Integers"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:letterSpacing="0.01"
+                        android:stateListAnimator="@null" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Bouncing Integers Button -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <Button
+                        android:id="@+id/btnWordproblemgame"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:backgroundTint="#F44336"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="💬  Word Problem &amp; Integers"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:letterSpacing="0.01"
+                        android:stateListAnimator="@null" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- User Manual Button -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/transparent">
+
+                <Button
+                    android:id="@+id/btnUserManual"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:backgroundTint="#9C27B0"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="📖  User Manual"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:letterSpacing="0.01"
+                    android:stateListAnimator="@null" />
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

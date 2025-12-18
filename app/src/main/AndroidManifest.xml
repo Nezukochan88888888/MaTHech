@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.mathech"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MaTHech"
+        android:hardwareAccelerated="true"
+        tools:targetApi="31">
+
+        <meta-data
+            android:name="developer_name"
+            android:value="Developed by Dyanne S. Roncales" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".StartActivity" android:exported="true"
+            tools:ignore="MissingClass" />
+
+        <activity android:name=".Preface" android:exported="true" />
+        <activity android:name=".TableOfContentsActivity" android:exported="true" />
+        <activity android:name=".MainActivity" android:exported="true" />
+        <activity android:name=".ReadyAddition" android:exported="true" />
+        <activity android:name=".Page2Activity" android:exported="false" />
+        <activity android:name=".Page3Activity" android:exported="false" />
+        <activity android:name=".Page4Activity" android:exported="false" />
+        <activity android:name=".Page5Activity" android:exported="false" />
+        <activity android:name=".Page6Activity" android:exported="false" />
+        <activity android:name=".Page7Activity" android:exported="false" />
+        <activity android:name=".Additionwordproblem" android:exported="false" />
+        <activity android:name=".Page8Activity" android:exported="false" />
+        <activity android:name=".ReadySubtraction" android:exported="false" />
+        <activity android:name=".Page9Activity" android:exported="false" />
+        <activity android:name=".Page10Activity" android:exported="false" />
+        <activity android:name=".Page11Activity" android:exported="false" />
+        <activity android:name=".Page12Activity" android:exported="false" />
+        <activity android:name=".Page13Activity" android:exported="false" />
+        <activity android:name=".Page14Activity" android:exported="false" />
+        <activity android:name=".Subtractionwordproblem" android:exported="false" />
+        <activity android:name=".Page15Activity" android:exported="false" />
+        <activity android:name=".ReadyMultiplication" android:exported="false" />
+        <activity android:name=".Page16Activity" android:exported="false" />
+        <activity android:name=".Page17Activity" android:exported="false" />
+        <activity android:name=".Page18Activity" android:exported="false" />
+        <activity android:name=".Page19Activity" android:exported="false" />
+        <activity android:name=".Page20Activity" android:exported="false" />
+        <activity android:name=".Page21Activity" android:exported="false" />
+        <activity android:name=".Multiplicationwordproblem" android:exported="false" />
+        <activity android:name=".Page22Activity" android:exported="false" />
+        <activity android:name=".ReadyDivision" android:exported="false" />
+        <activity android:name=".Page23Activity" android:exported="false" />
+        <activity android:name=".Page24Activity" android:exported="false" />
+        <activity android:name=".Page25Activity" android:exported="false" />
+        <activity android:name=".Page26Activity" android:exported="false" />
+        <activity android:name=".Page27Activity" android:exported="false" />
+        <activity android:name=".Page28Activity" android:exported="false" />
+        <activity android:name=".Divisionwordproblem" android:exported="false" />
+        <activity android:name=".Snakegame" android:exported="false" />
+        <activity android:name=".Bubblegame" android:exported="false" />
+        <activity android:name=".Wordproblemgame" android:exported="false" />
+        <activity android:name=".Interactiveline" android:exported="false" />
+        <activity android:name=".UserManualActivity" android:exported="false" />
+        <activity android:name=".EndingActivity" android:exported="false" />
+
+    </application>
+</manifest>

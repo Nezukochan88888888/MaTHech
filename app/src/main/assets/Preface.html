@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- 👇 Prevent zooming and panning -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Preface | MaTHech</title>
+
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        html, body {
+          width: 100%;
+          height: 100%;
+          overflow-x: hidden; /* 👈 Prevent horizontal movement */
+          touch-action: pan-y; /* 👈 Allow only vertical scrolling */
+        }
+
+        html {
+          scroll-behavior: smooth;
+          font-size: clamp(14px, 2vw, 18px);
+        }
+
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          line-height: 1.7;
+          color: #333;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          padding: 6vh 4vw;
+          position: relative;
+        }
+
+        body::before,
+        body::after {
+          content: '';
+          position: absolute;
+          border-radius: 50%;
+          animation: float 8s ease-in-out infinite;
+          z-index: 0;
+        }
+
+        body::before {
+          width: 35vw;
+          height: 35vw;
+          background: rgba(255, 255, 255, 0.08);
+          top: -10vw;
+          right: -10vw;
+        }
+
+        body::after {
+          width: 30vw;
+          height: 30vw;
+          background: rgba(255, 255, 255, 0.06);
+          bottom: -10vw;
+          left: -10vw;
+          animation-direction: reverse;
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        .container {
+          background: white;
+          border-radius: 20px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+          max-width: 900px;
+          width: 100%;
+          margin: 0 auto;
+          overflow: hidden;
+          position: relative;
+          z-index: 1;
+          animation: fadeUp 0.6s ease;
+        }
+
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 3vh 6vw;
+          text-align: center;
+          position: relative;
+        }
+
+        .header::before {
+          content: '🎯';
+          position: absolute;
+          font-size: 15vw;
+          opacity: 0.08;
+          top: 1vw;
+          right: 5vw;
+          animation: spin 25s linear infinite;
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+          font-size: clamp(2rem, 5vw, 3rem);
+          font-weight: 700;
+          margin-bottom: 1rem;
+          text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+          font-size: clamp(1rem, 3vw, 1.3rem);
+          font-weight: 300;
+          opacity: 0.95;
+        }
+
+        /* ✨ Content Section */
+        .content {
+          padding: 6vh 6vw;
+          line-height: 1.7;
+        }
+
+        .section {
+          margin-bottom: 2.5em;
+        }
+
+        .section p {
+          font-size: 1em;
+          color: #555;
+          margin-bottom: 1.2em;
+          text-align: justify;
+          opacity: 0;
+          transform: translateY(10px);
+          animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .section p:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .section p:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        @keyframes fadeInUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .fun-badge {
+          display: inline-block;
+          background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+          color: white;
+          padding: 0.6em 1.2em;
+          border-radius: 30px;
+          font-size: 0.9em;
+          font-weight: 600;
+          margin-bottom: 1.5em;
+          box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+          animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .highlight-box {
+          background: linear-gradient(135deg, #fff5f5, #f8f9ff);
+          padding: 2em;
+          border-left: 5px solid #667eea;
+          border-radius: 12px;
+          margin: 2em 0;
+          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+          position: relative;
+          opacity: 0;
+          transform: translateY(15px);
+          animation: fadeInUp 0.8s ease forwards;
+          animation-delay: 0.6s;
+        }
+
+        .highlight-box::before {
+          content: '💡';
+          position: absolute;
+          font-size: 10vw;
+          opacity: 0.1;
+          top: 10px;
+          right: 15px;
+        }
+
+        .features-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 1em;
+          margin: 2em 0;
+          opacity: 0;
+          transform: translateY(10px);
+          animation: fadeInUp 0.8s ease forwards;
+          animation-delay: 0.8s;
+        }
+
+        .feature-tag {
+          background: linear-gradient(135deg, #e0f2fe, #f0f4ff);
+          padding: 1em;
+          border-radius: 10px;
+          font-weight: 600;
+          color: #667eea;
+          text-align: center;
+          border: 2px solid #667eea;
+          box-shadow: 0 5px 15px rgba(102, 126, 234, 0.15);
+        }
+
+        /* ✨ Quote and Author Section (Updated for mobile) */
+        blockquote {
+          background: linear-gradient(135deg, #e6f7ff, #e0f2fe);
+          padding: 2em;
+          border-radius: 15px;
+          border: 3px solid #667eea;
+          font-style: italic;
+          margin-top: 2em;
+          color: #333;
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+          animation: fadeInUp 1s ease forwards;
+          animation-delay: 1s;
+        }
+
+        blockquote p {
+          margin: 0.3em auto;
+          max-width: 90%;
+        }
+
+        blockquote p:first-child {
+          text-align: center;
+          font-size: 1.05em;
+          line-height: 1.6;
+        }
+
+        blockquote p:last-child {
+          text-align: right;
+          font-style: italic;
+          margin-top: 0.4em;
+          margin-right: 8%;
+          color: #555;
+        }
+
+        @media (max-width: 600px) {
+          .content {
+            padding: 5vh 5vw;
+          }
+
+          .section {
+            margin-bottom: 2em;
+          }
+
+          .section p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 1em;
+            word-spacing: 0.05em;
+          }
+
+          .fun-badge {
+            font-size: 0.85em;
+            padding: 0.5em 1em;
+            margin-bottom: 1em;
+          }
+
+          blockquote p:first-child {
+            font-size: 1em;
+            line-height: 1.4;
+            margin-bottom: 0.2em;
+          }
+
+          blockquote p:last-child {
+            margin-top: 0.1em;
+            margin-right: 6%;
+            font-size: 0.95em;
+          }
+        }
+
+        .motivation {
+          text-align: center;
+          font-size: 1em;
+          color: #444;
+          margin-top: 2em;
+          animation: fadeInUp 0.8s ease forwards;
+          animation-delay: 0.9s;
+        }
+
+        .next-btn {
+          display: block;
+          width: fit-content;
+          margin: 2.5em auto 0;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          text-decoration: none;
+          padding: 1em 2.5em;
+          border-radius: 50px;
+          font-weight: 700;
+          font-size: 1em;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+          animation: fadeInUp 0.8s ease forwards;
+          animation-delay: 1.1s;
+        }
+
+        .next-btn:hover {
+          transform: scale(1.05);
+          box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            animation: none !important;
+            transition: none !important;
+          }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 Preface</h1>
+        <p>Your Journey to Mastering Integers Starts Here!</p>
+    </div>
+
+    <div class="content">
+        <div class="section">
+            <span class="fun-badge">✨ Why MaTHech?</span>
+            <p>The <strong>MaTHech</strong> application was developed to strengthen students' understanding of
+                <strong>integers</strong> through interactive and enjoyable learning experiences. Inspired by the
+                need to address the <strong>PISA numeracy gap</strong>, this app focuses on helping learners improve
+                their confidence and competence in handling mathematical operations involving integers.</p>
+
+            <p>Aligned with the <strong>MATATAG Curriculum</strong> and the <strong>Enhanced K–10 Curriculum</strong>, it ensures
+                that every learning experience is engaging, inclusive, and reflective of the Department of Education’s standards.</p>
+        </div>
+
+        <div class="highlight-box">
+            <p>🌟 Recognizing that many learners face challenges with numeracy—especially in areas with limited internet
+                access—<strong>MaTHech</strong> was designed as an <strong>offline educational tool</strong> to promote inclusivity and equal learning opportunities for all students.</p>
+        </div>
+
+        <div class="section">
+            <span class="fun-badge">🎯 Made Just for You!</span>
+            <p>Tailored for <strong>Grade 7 students</strong>, this application aims to enhance skills in
+                <strong>integer operations</strong>, preparing learners for higher-level mathematical concepts. Through
+                hands-on, fun activities, students will gain both confidence and joy in learning mathematics.</p>
+
+            <div class="features-grid">
+                <div class="feature-tag">🎮 Fun Games</div>
+                <div class="feature-tag">🧩 Interactive</div>
+                <div class="feature-tag">🏆 Achievements</div>
+                <div class="feature-tag">📱 Offline Ready</div>
+            </div>
+
+            <p class="motivation">💬 Remember: Learning math isn’t about speed — it’s about understanding and growth!</p>
+
+            <blockquote>
+                <p>"The only way to learn mathematics is to do mathematics."</p>
+                <p>— <em>Paul Halmos</em></p>
+            </blockquote>
+
+            <a href="#" class="next-btn" onclick="Android.goNextPage()">Proceed to Table of Contents →</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

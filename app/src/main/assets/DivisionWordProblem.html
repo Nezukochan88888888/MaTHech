@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integer Operations: Division Problems</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00C9A7 0%, #92FE9D 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+        .header h1 { color: #667eea; font-size: 28px; margin-bottom: 8px; }
+        .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px; transition: width 0.3s ease; }
+        .score-info { text-align: center; color: #666; font-size: 14px; margin-top: 10px; }
+        #quiz-container { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .problem-box { background: #f8f9ff; padding: 20px; border-radius: 10px; border-left: 5px solid #667eea; margin-bottom: 25px; line-height: 1.6; }
+        .problem-box p { color: #333; font-size: 16px; margin-bottom: 10px; }
+        .calculation { background: white; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: 'Courier New', monospace; color: #764ba2; font-weight: bold; text-align: center; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .option { padding: 15px; background: #f5f5f5; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-weight: 500; color: #333; }
+        .option:hover { background: #e8e8ff; border-color: #667eea; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2); }
+        .option.selected { background: #667eea; border-color: #667eea; color: white; }
+        .option.correct { background: #4caf50; border-color: #4caf50; color: white; animation: pulse 0.5s ease; }
+        .option.incorrect { background: #f44336; border-color: #f44336; color: white; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .feedback { padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; font-weight: 500; }
+        .feedback.show { display: block; animation: slideIn 0.3s ease; }
+        .feedback.correct { background: #c8e6c9; color: #2e7d32; border-left: 4px solid #4caf50; }
+        .feedback.incorrect { background: #ffcdd2; color: #c62828; border-left: 4px solid #f44336; }
+        .button-group { display: flex; gap: 12px; justify-content: center; }
+        button { padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-submit { background: linear-gradient(135deg, #667eea, #764ba2); color: white; flex: 1; }
+        .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+        .end-screen { display: none; text-align: center; animation: fadeIn 0.5s ease; }
+        .end-screen.active { display: block; }
+        .final-score { font-size: 72px; color: #667eea; font-weight: bold; margin: 30px 0; }
+        .score-message { font-size: 24px; color: #333; margin-bottom: 30px; }
+        .btn-restart { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px 40px; font-size: 18px; margin-top: 20px; }
+        .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1> Word Problem</h1>
+        <p>Choose the correct answer</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="score-info">
+            <span id="questionCounter">Question 1 of 10</span>
+            <span id="scoreDisplay"> | Score: 0</span>
+        </div>
+    </div>
+
+    <div id="quiz-container">
+        <div class="problem-box">
+            <p><strong id="question-title"></strong></p>
+            <p id="question-problem"></p>
+            <div class="calculation" id="question-calculation"></div>
+        </div>
+        <div class="options" id="options-container">
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <div class="button-group">
+            <button class="btn-submit" id="submit-btn">Submit Answer</button>
+        </div>
+    </div>
+
+    <div class="end-screen" id="endScreen">
+        <h2>🎉 Activity Complete!</h2>
+        <div class="final-score" id="finalScore"></div>
+        <div class="score-message" id="scoreMessage"></div>
+        <button class="btn-restart" id="restart-btn">Try Again</button>
+    </div>
+</div>
+
+<audio id="tapSound" src="sounds/tap.mp3" preload="auto"></audio>
+<audio id="correctSound" src="sounds/correct.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="sounds/wrong.mp3" preload="auto"></audio>
+<audio id="retrySound" src="sounds/retry.mp3" preload="auto"></audio>
+<audio id="congratsSound" src="sounds/congrats.mp3" preload="auto"></audio>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- QUIZ DATA ---
+        const quizData = [
+            { title: "🌡️ Temperature Decrease Rate", problem: "A city’s temperature dropped by –12°C over 3 hours. <strong>What was the average change in temperature per hour?</strong>", calculation: "–12 ÷ 3 = ?", options: ["–4°C", "4°C", "–3°C", "3°C"], answer: 0 },
+            { title: "💸 Sharing a Debt", problem: "Three friends share a ₱–900 debt equally. <strong>How much does each one owe?</strong>", calculation: "–900 ÷ 3 = ?", options: ["₱–300", "₱300", "₱–600", "₱600"], answer: 0 },
+            { title: "🌊 Descending Distance", problem: "A submarine went –120 meters in 10 minutes. <strong>How many meters did it descend per minute?</strong>", calculation: "–120 ÷ 10 = ?", options: ["–10 m", "–12 m", "12 m", "10 m"], answer: 1 },
+            { title: "🎲 Positive and Negative Division", problem: "If a total gain of +24 points is divided equally among –6 players (representing losing players), <strong>what is the result?</strong>", calculation: "+24 ÷ –6 = ?", options: ["–4", "4", "–3", "3"], answer: 0 },
+            { title: "☀️ Temperature Rise Calculation", problem: "A total increase of –20°C happened over –4 hours (two negatives). <strong>What is the rate of change per hour?</strong>", calculation: "–20 ÷ –4 = ?", options: ["–5°C", "5°C", "–6°C", "6°C"], answer: 1 },
+            { title: "📉 Bank Loss", problem: "A company lost ₱–2,400 evenly over –8 days (two negatives). <strong>How much did it lose per day?</strong>", calculation: "", options: ["₱–300", "₱300", "₱–200", "₱200"], answer: 1 },
+            { title: "🍎 Sharing Apples", problem: "A basket has –36 apples (rotten apples). If they are thrown away equally over –6 days, <strong>how many apples were thrown each day?</strong>", calculation: "", options: ["6", "–6", "7", "–7"], answer: 0 },
+            { title: "🌡️ Temperature Calculation", problem: "Over 9 hours, the temperature dropped a total of –27°C. <strong>What was the change in temperature per hour?</strong>", calculation: "", options: ["–3°C", "3°C", "–9°C", "9°C"], answer: 0 },
+            { title: "⛰️ Mountain Hike", problem: "A hiker descended –84 meters in 12 steps. <strong>How many meters did he go down with each step?</strong>", calculation: "", options: ["–8 m", "8 m", "–7 m", "7 m"], answer: 2 },
+            { title: "🏈 Football Penalty", problem: "A football team lost –36 points evenly over 9 games. <strong>How many points did they lose per game?</strong>", calculation: "", options: ["3", "–3", "4", "–4"], answer: 3 }
+        ];
+
+        // --- STATE VARIABLES ---
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+
+        // --- DOM ELEMENTS ---
+        const quizContainer = document.getElementById('quiz-container');
+        const questionTitleEl = document.getElementById('question-title');
+        const questionProblemEl = document.getElementById('question-problem');
+        const questionCalculationEl = document.getElementById('question-calculation');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const submitBtn = document.getElementById('submit-btn');
+        const endScreen = document.getElementById('endScreen');
+        const restartBtn = document.getElementById('restart-btn');
+        const questionCounterEl = document.getElementById('questionCounter');
+        const scoreDisplayEl = document.getElementById('scoreDisplay');
+        const progressFill = document.getElementById('progressFill');
+
+        // --- FUNCTIONS ---
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play();
+            }
+        }
+
+        function displayQuestion() {
+            selectedAnswer = null;
+            const question = quizData[currentQuestion];
+
+            questionTitleEl.textContent = question.title;
+            questionProblemEl.innerHTML = question.problem; // Use .innerHTML to render the <strong> tag
+
+            // Only show calculation box if text exists for it
+            if (question.calculation) {
+                questionCalculationEl.textContent = question.calculation;
+                questionCalculationEl.style.display = 'block';
+            } else {
+                questionCalculationEl.style.display = 'none';
+            }
+
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.classList.add('option');
+                optionEl.textContent = option;
+                optionEl.dataset.index = index;
+                optionEl.addEventListener('click', () => selectAnswer(optionEl, index));
+                optionsContainer.appendChild(optionEl);
+            });
+
+            feedbackEl.classList.remove('show', 'correct', 'incorrect');
+            submitBtn.textContent = 'Submit Answer';
+            submitBtn.disabled = true;
+            updateProgress();
+        }
+
+        function selectAnswer(element, index) {
+            if (submitBtn.textContent !== 'Submit Answer') return; // Don't allow changing answer after submitting
+
+            playSound("tapSound");
+
+            // Deselect previous option
+            const previouslySelected = optionsContainer.querySelector('.selected');
+            if (previouslySelected) {
+                previouslySelected.classList.remove('selected');
+            }
+
+            // Select new option
+            element.classList.add('selected');
+            selectedAnswer = index;
+            submitBtn.disabled = false;
+        }
+
+        function checkAnswer() {
+            const question = quizData[currentQuestion];
+            const isCorrect = (selectedAnswer === question.answer);
+            const options = optionsContainer.children;
+
+            if (isCorrect) {
+                playSound("correctSound");
+                score++;
+                options[selectedAnswer].classList.add('correct');
+                feedbackEl.textContent = '✅ Correct! Great job!';
+                feedbackEl.className = 'feedback correct show';
+            } else {
+                playSound("wrongSound");
+                options[selectedAnswer].classList.add('incorrect');
+                options[question.answer].classList.add('correct');
+                feedbackEl.innerHTML = `❌ Incorrect. The correct answer is <strong>${question.options[question.answer]}</strong>.`;
+                feedbackEl.className = 'feedback incorrect show';
+            }
+
+            updateProgress();
+            submitBtn.disabled = false;
+
+            if (currentQuestion < quizData.length - 1) {
+                submitBtn.textContent = 'Next Question';
+            } else {
+                submitBtn.textContent = 'Finish';
+            }
+        }
+
+        function updateProgress() {
+            const progressPercentage = ((currentQuestion + 1) / quizData.length) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
+            questionCounterEl.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            scoreDisplayEl.textContent = ` | Score: ${score}`;
+        }
+
+        function showEndScreen() {
+            quizContainer.style.display = 'none';
+            endScreen.classList.add('active');
+            document.getElementById('finalScore').textContent = `${score}/${quizData.length}`;
+
+            const messages = [
+                "Keep practicing! You're on your way! 💪", "Keep practicing! You're on your way! 💪",
+                "Good effort! Review the concepts and try again. 📚", "Good effort! Review the concepts and try again. 📚",
+                "Nice work! You're getting there! 👍", "Nice work! You're getting there! 👍",
+                "Great job! You're doing well! 🌟", "Great job! You're doing well! 🌟",
+                "Excellent! You're mastering integers! ⭐", "Amazing! Almost perfect! 🎯",
+                "Perfect score! Outstanding work! 🏆"
+            ];
+            document.getElementById('scoreMessage').textContent = messages[score];
+
+            if (score === quizData.length) playSound("congratsSound");
+            else if (score >= 1) playSound("retrySound");
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            quizContainer.style.display = 'block';
+            endScreen.classList.remove('active');
+            displayQuestion();
+        }
+
+        // --- EVENT LISTENERS ---
+        submitBtn.addEventListener('click', () => {
+            if (submitBtn.textContent === 'Submit Answer') {
+                checkAnswer();
+            } else if (submitBtn.textContent === 'Next Question') {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                showEndScreen();
+            }
+        });
+
+        restartBtn.addEventListener('click', restartQuiz);
+
+        // --- INITIALIZE QUIZ ---
+        displayQuestion();
+    });
+</script>
+</body>
+</html>

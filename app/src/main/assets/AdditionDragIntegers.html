@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Math</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: clamp(10px, 4vw, 20px);
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .directions {
+            background: white;
+            border-radius: clamp(15px, 3vw, 20px);
+            padding: clamp(15px, 5vw, 30px);
+            margin-bottom: clamp(20px, 5vw, 30px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .directions h2 {
+            color: #333;
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .content-wrapper {
+            background: white;
+            border-radius: clamp(15px, 3vw, 20px);
+            padding: clamp(15px, 5vw, 30px);
+            gap: clamp(15px, 4vw, 30px);
+            margin-bottom: clamp(20px, 5vw, 25px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: row; /* This will now apply to ALL screen sizes */
+            align-items: flex-start;
+        }
+
+        /* * REMOVED: The entire @media (max-width: 767px) block was here.
+         * By removing it, the layout will no longer change to a column on mobile.
+        */
+
+        .problems-section {
+            /* CHANGED: Set to take up the majority of the space */
+            flex: 1 1 65%;
+            min-width: 0;
+        }
+
+        .problem {
+            display: flex;
+            align-items: center;
+            gap: 0px;
+            margin-bottom: 5px;
+            padding: clamp(10px, 3vw, 15px);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .problem:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .equation {
+            font-size: clamp(1rem, 4.5vw, 1.25rem);
+            min-width: clamp(110px, 25vw, 140px);
+            font-weight: 700;
+            color: #2d3748;
+            flex-shrink: 0;
+        }
+
+        .drop-zone {
+    min-width: clamp(80px, 20vw, 100px);
+    height: clamp(48px, 12vw, 55px);
+    border: 3px dashed #cbd5e0;
+    border-radius: 10px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 1;
+    margin-left: -30px;
+}
+
+
+        .drop-zone.drag-over {
+            background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .drop-zone.filled {
+            border-style: solid;
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        }
+
+        .drop-zone.correct {
+            border-color: #22c55e;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            animation: correctPulse 0.5s ease;
+        }
+
+        .drop-zone.incorrect {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .answers-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* CHANGED: Removed rigid pixel widths and made it flexible */
+            flex: 1 1 35%;
+        }
+
+        .answer-choice {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            padding: 12px clamp(10px, 3vw, 20px);
+            border-radius: 10px;
+            font-size: clamp(1rem, 4vw, 1.125rem);
+            font-weight: 700;
+            text-align: center;
+            cursor: move;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: all 0.3s ease;
+            touch-action: none;
+            border: 2px solid #94a3b8;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-word;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .answer-choice:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .answer-choice:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .answer-choice.dragging {
+            opacity: 0.5;
+        }
+
+        .answer-choice.used {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+
+        .dragged-answer {
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .check-button, .retry-button {
+            border: none;
+            padding: 18px clamp(20px, 6vw, 40px);
+            font-size: clamp(1rem, 4vw, 1.125rem);
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 60px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white;
+        }
+
+        .check-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+
+        .retry-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: none;
+        }
+
+        .retry-button.show {
+            display: flex;
+        }
+
+        .retry-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .check-button:active, .retry-button:active {
+            transform: scale(0.98);
+        }
+
+        .results {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: clamp(1.5rem, 6vw, 1.75rem);
+            font-weight: 700;
+        }
+
+        .score {
+            font-size: clamp(2.25rem, 10vw, 2.625rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="directions">
+        <h2>Directions: Drag the correct answers into the correct boxes</h2>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="problems-section">
+            <div class="problem">
+                <div class="equation">-10+5=</div>
+                <div class="drop-zone" data-answer="-5"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">-7+10=</div>
+                <div class="drop-zone" data-answer="3"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">9+(-3)=</div>
+                <div class="drop-zone" data-answer="6"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">5+(-5)=</div>
+                <div class="drop-zone" data-answer="0"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">12+(-5)=</div>
+                <div class="drop-zone" data-answer="7"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">7+(-8)=</div>
+                <div class="drop-zone" data-answer="-1"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">6+(-8)=</div>
+                <div class="drop-zone" data-answer="-2"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">0+(-9)=</div>
+                <div class="drop-zone" data-answer="-9"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">-8+(-8)=</div>
+                <div class="drop-zone" data-answer="-16"></div>
+            </div>
+
+            <div class="problem">
+                <div class="equation">-5+(-6)=</div>
+                <div class="drop-zone" data-answer="-11"></div>
+            </div>
+        </div>
+
+        <div class="answers-section" id="answers">
+            <div class="answer-choice" draggable="true" data-value="-1">-1</div>
+            <div class="answer-choice" draggable="true" data-value="-9">-9</div>
+            <div class="answer-choice" draggable="true" data-value="-17">-17</div>
+            <div class="answer-choice" draggable="true" data-value="-11">-11</div>
+            <div class="answer-choice" draggable="true" data-value="-5">-5</div>
+            <div class="answer-choice" draggable="true" data-value="-10">-10</div>
+            <div class="answer-choice" draggable="true" data-value="-2">-2</div>
+            <div class="answer-choice" draggable="true" data-value="0">0</div>
+            <div class="answer-choice" draggable="true" data-value="-16">-16</div>
+            <div class="answer-choice" draggable="true" data-value="7">7</div>
+            <div class="answer-choice" draggable="true" data-value="6">6</div>
+            <div class="answer-choice" draggable="true" data-value="undefined">undefined</div>
+            <div class="answer-choice" draggable="true" data-value="3">3</div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="check-button" onclick="checkAnswers()">
+            <span>✓</span> Check
+        </button>
+
+        <button class="retry-button" id="retryButton" onclick="retryQuiz()">
+            <span>↻</span> Retry
+        </button>
+    </div>
+
+    <div class="results" id="results">
+        <h2>Your Score</h2>
+        <div class="score" id="score"></div>
+    </div>
+</div>
+
+<audio id="dropSound" src="sounds/drop.mp3" preload="auto"></audio>
+<audio id="congratsSound" src="sounds/congrats.mp3" preload="auto"></audio>
+<audio id="retrySound" src="sounds/retry.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="sounds/wrong.mp3" preload="auto"></audio>
+
+<script>
+    let draggedElement = null, touchStartX, touchStartY, clone = null;
+
+    // ✅ Sound helper
+    function playSound(id) {
+        const sound = document.getElementById(id);
+        if (sound) { sound.currentTime = 0; sound.play(); }
+    }
+
+    // ----- Initialize draggables -----
+    document.querySelectorAll('.answer-choice').forEach(choice => {
+        choice.addEventListener('dragstart', handleDragStart);
+        choice.addEventListener('dragend', handleDragEnd);
+        choice.addEventListener('touchstart', handleTouchStart, { passive: false });
+        choice.addEventListener('touchmove', handleTouchMove, { passive: false });
+        choice.addEventListener('touchend', handleTouchEnd, { passive: false });
+        if (!choice.dataset.originalParent) choice.dataset.originalParent = choice.parentElement.id;
+    });
+
+    // ----- Initialize drop zones -----
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', handleDragOver);
+        zone.addEventListener('drop', handleDrop);
+        zone.addEventListener('dragleave', handleDragLeave);
+        zone.addEventListener('click', handleDropZoneClick);
+    });
+
+    // ----- Drag & Drop Handlers -----
+    function handleDragStart(e) {
+        if (this.classList.contains('used')) { e.preventDefault(); return; }
+        draggedElement = this; this.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
+    }
+    function handleDragEnd(e) { this.classList.remove('dragging'); }
+    function handleDragOver(e) { e.preventDefault(); if(!this.classList.contains('filled')) this.classList.add('drag-over'); e.dataTransfer.dropEffect = 'move'; }
+    function handleDragLeave(e) { this.classList.remove('drag-over'); }
+    function handleDrop(e) {
+        e.preventDefault(); this.classList.remove('drag-over');
+        if (draggedElement && !this.classList.contains('filled')) {
+            const value = draggedElement.dataset.value;
+            this.innerHTML = `<span class="dragged-answer" data-value="${value}">${value}</span>`;
+            this.classList.add('filled'); draggedElement.classList.add('used'); draggedElement.style.opacity = '0'; draggedElement = null;
+            playSound("dropSound");
+        }
+    }
+    function handleDropZoneClick(e) {
+        if (this.classList.contains('filled')) {
+            const value = this.querySelector('.dragged-answer').dataset.value;
+            this.innerHTML = ''; this.classList.remove('filled', 'correct', 'incorrect');
+            const answerChoice = document.querySelector(`.answer-choice[data-value="${value}"]`);
+            if (answerChoice) {
+                answerChoice.classList.remove('used'); answerChoice.style.opacity = '1';
+                const parentEl = document.getElementById(answerChoice.dataset.originalParent);
+                if (parentEl && !parentEl.contains(answerChoice)) parentEl.appendChild(answerChoice);
+            }
+        }
+    }
+
+    // ----- Touch Handlers -----
+    function handleTouchStart(e) {
+        if (this.classList.contains('used')) { e.preventDefault(); return; }
+        e.preventDefault(); draggedElement = this;
+        const touch = e.touches[0]; touchStartX = touch.clientX; touchStartY = touch.clientY;
+        clone = this.cloneNode(true); clone.style.position = 'fixed'; clone.style.zIndex = '10000'; clone.style.pointerEvents = 'none'; clone.style.opacity = '0.9';
+        clone.style.width = this.offsetWidth + 'px'; clone.style.left = (touch.clientX - this.offsetWidth/2)+'px'; clone.style.top = (touch.clientY - this.offsetHeight/2)+'px';
+        document.body.appendChild(clone); this.style.opacity = '0';
+    }
+    function handleTouchMove(e) {
+        if (!draggedElement || !clone) return; e.preventDefault();
+        const touch = e.touches[0]; clone.style.left = (touch.clientX - clone.offsetWidth/2)+'px'; clone.style.top = (touch.clientY - clone.offsetHeight/2)+'px';
+        clone.style.display = 'none'; const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY); clone.style.display = 'block';
+        document.querySelectorAll('.drop-zone').forEach(zone => zone.classList.remove('drag-over'));
+        if (elementBelow && elementBelow.classList.contains('drop-zone') && !elementBelow.classList.contains('filled')) elementBelow.classList.add('drag-over');
+    }
+    function handleTouchEnd(e) {
+        if (!draggedElement) return;
+        const touch = e.changedTouches[0]; if (clone) clone.style.display='none';
+        const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (elementBelow && elementBelow.classList.contains('drop-zone') && !elementBelow.classList.contains('filled')) {
+            const value = draggedElement.dataset.value;
+            elementBelow.innerHTML = `<span class="dragged-answer" data-value="${value}">${value}</span>`;
+            elementBelow.classList.add('filled'); elementBelow.classList.remove('drag-over');
+            draggedElement.classList.add('used'); draggedElement.style.opacity='0';
+            playSound("dropSound");
+        } else { draggedElement.style.opacity='1'; }
+        if (clone) { clone.remove(); clone=null; } draggedElement=null;
+        document.querySelectorAll('.drop-zone').forEach(zone => zone.classList.remove('drag-over'));
+    }
+
+    // ----- Check Answers -----
+    function checkAnswers() {
+        let correct=0, total=0;
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            total++;
+            const correctAnswer = zone.dataset.answer;
+            const answerElement = zone.querySelector('.dragged-answer');
+            if (answerElement) {
+                if (answerElement.dataset.value === correctAnswer) { zone.classList.add('correct'); zone.classList.remove('incorrect'); correct++; }
+                else { zone.classList.add('incorrect'); zone.classList.remove('correct'); }
+            } else { zone.classList.remove('correct','incorrect'); }
+        });
+
+        const resultsDiv = document.getElementById('results');
+        const scoreDiv = document.getElementById('score');
+        const retryButton = document.getElementById('retryButton');
+
+        if (correct === total) {
+            scoreDiv.innerHTML = '🎉 Perfect! ' + correct + '/' + total;
+            playSound("congratsSound");
+        } else if (correct > 0) {
+            scoreDiv.innerHTML = correct + '/' + total + ' correct';
+            playSound("retrySound");
+        } else {
+            scoreDiv.innerHTML = '0/' + total + ' correct';
+            playSound("wrongSound");
+        }
+
+        resultsDiv.classList.add('show');
+        retryButton.classList.add('show');
+    }
+
+    // ----- Retry Quiz -----
+    function retryQuiz() {
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.innerHTML=''; zone.classList.remove('filled','correct','incorrect','drag-over');
+        });
+        document.querySelectorAll('.answer-choice').forEach(choice => {
+            choice.classList.remove('used','dragging'); choice.style.opacity='1';
+            const parentEl = document.getElementById(choice.dataset.originalParent);
+            if (parentEl && !parentEl.contains(choice)) parentEl.appendChild(choice);
+        });
+        document.getElementById('results').classList.remove('show');
+        document.getElementById('retryButton').classList.remove('show');
+    }
+</script>
+</body>
+</html>
